@@ -27,7 +27,7 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 
 	/// This token identifies the upload
 	
-	var uploadToken:Any? = nil
+	var uploadID: BXYouTubeSharingController.UploadID? = nil
 	
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -97,24 +97,24 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	func didStartUpload(token:Any)
+	func didStartUpload(identifier: BXYouTubeSharingController.UploadID)
 	{
-		self.uploadToken = token
+		self.uploadID = identifier
 	}
 	
-	func didContinueUpload(token:Any,progress:Double)
+	func didContinueUpload(identifier: BXYouTubeSharingController.UploadID, progress:Double)
 	{
 		// Display progress
 	}
 	
-	func didFinishUpload(token:Any,error:Error?)
+	func didFinishUpload(identifier: BXYouTubeSharingController.UploadID, error:Error?)
 	{
 		if let error = error
 		{
 			print("Error: \(error)")
 		}
 		
-		self.uploadToken = nil
+		self.uploadID = nil
 	}
 
 }

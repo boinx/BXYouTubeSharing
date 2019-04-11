@@ -18,7 +18,7 @@ import UIKit
 public class BXYouTubeSharingController
 {
 
-	/// The Credential identify both the host application and the user.
+	/// The Credential identify both the host application and the user
 	///
 	/// Without this info uploading to YouTube is not possible. More info at:
 	/// https://developers.google.com/youtube/v3/
@@ -117,9 +117,14 @@ public class BXYouTubeSharingController
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// Starts the upload process
+	/// A unique identifier for an upload operation. Store it if you want to cancel the upload later.
 	
-	@discardableResult public func startUpload() -> Any?
+	public typealias UploadID = String
+	
+	
+	/// Starts the upload process
+	
+	@discardableResult public func startUpload() -> UploadID?
 	{
 		guard let srcURL = self.item.url else { return nil }
 
@@ -127,14 +132,17 @@ public class BXYouTubeSharingController
 		
 		let controller = UIDocumentPickerViewController(urls:[srcURL], in:.moveToService)
 		controller.allowsMultipleSelection = false
-		currentViewController?.present(controller,animated:true, completion:nil)
+		currentViewController?.present(controller, animated:true, completion:nil)
 		
 		// TODO: implement
 
-		return UUID().uuidString
+		return UUID().uuidString 
 	}
 	
-	public func cancelUpload(token:Any)
+	
+	/// Cancels the upload with the specified UploadID
+	
+	public func cancelUpload(with identifier:UploadID)
 	{
 		// TODO: implement
 	}
@@ -148,16 +156,16 @@ public class BXYouTubeSharingController
 
 public protocol BXYouTubeSharingDelegate : class
 {
-	func didStartUpload(token:Any)
-	func didContinueUpload(token:Any,progress:Double)
-	func didFinishUpload(token:Any,error:Error?)
+	func didStartUpload(identifier: BXYouTubeSharingController.UploadID)
+	func didContinueUpload(identifier: BXYouTubeSharingController.UploadID, progress:Double)
+	func didFinishUpload(identifier: BXYouTubeSharingController.UploadID, error:Error?)
 }
 
 public extension BXYouTubeSharingDelegate
 {
-	func didStartUpload(token:Any) {}
-	func didContinueUpload(token:Any,progress:Double) {}
-	func didFinishUpload(token:Any,error:Error?) {}
+	func didStartUpload(identifier: BXYouTubeSharingController.UploadID) {}
+	func didContinueUpload(identifier: BXYouTubeSharingController.UploadID, progress:Double) {}
+	func didFinishUpload(identifier: BXYouTubeSharingController.UploadID, error:Error?) {}
 }
 
 

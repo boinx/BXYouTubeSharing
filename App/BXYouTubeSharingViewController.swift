@@ -80,13 +80,13 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 		controller.credentials = BXYouTubeSharingController.Credentials(
 			clientID:"UUID.apps.googleusercontent.com",
 			clientSecret:"UUID",
-			account:"johndoe",
-			password:"•••••••")
+			account:"johndoe@gmail.com",
+			password:"••••••••••")
 
 		controller.item = BXYouTubeSharingController.Item(
 			url:url,
 			title:"My Slideshow",
-			description:"Memories of my last vacation",
+			description:"Memories of my last vacation.\n\nMusic by Jane Doe\n\nCC-BY 2019",
 			categoryID:"Travel",
 			isPrivate:false)
 		

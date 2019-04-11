@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--You Tube Sharing View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="BXYouTubeSharingViewController" customModule="BXYouTubeSharing" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="YouTube Sharing App" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W9T-UQ-wbP">
+                                <rect key="frame" x="96.5" y="64" width="221" height="27"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vca-Q3-e8Q">
+                                <rect key="frame" x="147" y="131" width="120" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Select Video"/>
+                                <connections>
+                                    <action selector="selectFile:" destination="BYZ-38-t0r" eventType="touchUpInside" id="h2K-jJ-80V"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8NY-hQ-lA4">
+                                <rect key="frame" x="179" y="248" width="56" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Share"/>
+                                <connections>
+                                    <action selector="share:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xaA-9p-YMM"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="None Selected" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CRC-hg-wxU">
+                                <rect key="frame" x="156.5" y="190" width="101" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="W9T-UQ-wbP" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="MWC-OR-cAX"/>
+                            <constraint firstItem="Vca-Q3-e8Q" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="PMf-2q-oyw"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="CRC-hg-wxU" secondAttribute="trailing" constant="20" id="Qb2-Nv-8u7"/>
+                            <constraint firstItem="CRC-hg-wxU" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="R1K-Oo-epO"/>
+                            <constraint firstItem="W9T-UQ-wbP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Vlz-a9-r9Z"/>
+                            <constraint firstItem="8NY-hQ-lA4" firstAttribute="top" secondItem="CRC-hg-wxU" secondAttribute="bottom" constant="40" id="Wg6-qE-elL"/>
+                            <constraint firstItem="8NY-hQ-lA4" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="aVS-Wg-juj"/>
+                            <constraint firstItem="Vca-Q3-e8Q" firstAttribute="top" secondItem="W9T-UQ-wbP" secondAttribute="bottom" constant="40" id="iwA-te-YWV"/>
+                            <constraint firstItem="CRC-hg-wxU" firstAttribute="top" secondItem="Vca-Q3-e8Q" secondAttribute="bottom" constant="20" id="pz5-Ub-k94"/>
+                            <constraint firstItem="CRC-hg-wxU" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="yo5-kg-INu"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="shareButton" destination="8NY-hQ-lA4" id="4M7-Xy-Thy"/>
+                        <outlet property="urlLabel" destination="CRC-hg-wxU" id="qYx-OQ-kcI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>

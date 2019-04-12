@@ -14,21 +14,53 @@ import BXYouTubeSharing
 //----------------------------------------------------------------------------------------------------------------------
 
 
-class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate,BXYouTubeSharingDelegate
+class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate,BXYouTubeSharingDelegate,UIPickerViewDataSource,UIPickerViewDelegate
 {
 	// Outlets
 	
+	@IBOutlet weak var selectFileButton:UIButton!
+	@IBOutlet weak var urlField:UITextField!
+	@IBOutlet weak var titleField:UITextField!
+	@IBOutlet weak var descriptionField:UITextView!
+	@IBOutlet weak var tagsField:UITextField!
+	@IBOutlet weak var categoryPicker:UIPickerView!
+	@IBOutlet weak var privacyPicker:UIPickerView!
 	@IBOutlet weak var shareButton:UIButton!
-	@IBOutlet weak var urlLabel:UILabel!
 
 	/// The URL of the selected file
 	
 	var url:URL? = nil
 
+	/// The list of YouTube categories
+	
+	var categories:[BXYouTubeSharingController.Category] = []
+	{
+		didSet { categoryPicker.reloadAllComponents() }
+	}
+	
+	/// The list of YouTube privacy statuses
+	
+	var privacyStatuses:[BXYouTubeSharingController.Item.PrivacyStatus] = [.private,.public,.unlisted]
+	
 	/// This token identifies the upload
 	
 	var uploadID: BXYouTubeSharingController.UploadID? = nil
 	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+	
+	override func viewDidLoad()
+	{
+		super.viewDidLoad()
+		
+		BXYouTubeSharingController.shared.categories(for:"en")
+		{
+			categories in
+			self.categories = categories
+		}
+	}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -48,21 +80,58 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
    	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
     {
 		self.url = urls.first
-		self.updateUserInterface()
+		self.didPickFile()
     }
 
 	func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController)
 	{
 		self.url = nil
-		self.updateUserInterface()
+		self.didPickFile()
 	}
 
-	func updateUserInterface()
+	func didPickFile()
 	{
-		self.urlLabel.text = url?.path ?? "None Selected"
+		self.urlField.text = url?.path ?? "None Selected"
 		self.shareButton.isEnabled = url != nil
 	}
 
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+    func numberOfComponents(in pickerView: UIPickerView) -> Int
+    {
+		return 1
+    }
+
+	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+	{
+		if pickerView === categoryPicker
+		{
+			return self.categories.count
+		}
+		else if pickerView === privacyPicker
+		{
+			return 3
+		}
+		
+		return 0
+	}
+	
+   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+   {
+		if pickerView === categoryPicker
+		{
+			return self.categories[row].localizedName
+		}
+		else if pickerView === privacyPicker
+		{
+			return self.privacyStatuses[row].rawValue
+		}
+	
+		return nil
+   }
+	
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -72,18 +141,25 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 	@IBAction func share(_ sender:Any!)
 	{
 		guard let url = url else { return }
-		
+		let title = titleField.text ?? ""
+		let description = descriptionField.text ?? ""
+		let tags = (tagsField.text ?? "").components(separatedBy:",").map { $0.trimmingCharacters(in:CharacterSet.whitespaces) }
+		let privacyIndex = privacyPicker.selectedRow(inComponent:0)
+		let privacyStatus = self.privacyStatuses[privacyIndex]
+		let categoryIndex = categoryPicker.selectedRow(inComponent:0)
+		let categoryID = self.categories[categoryIndex].identifier
+
 		let controller = BXYouTubeSharingController.shared
 		controller.accessToken = "•••••••••••••••••••••••••••"
 		controller.delegate = self
-		controller.currentViewController = self
 
 		let item = BXYouTubeSharingController.Item(
 			url:url,
-			title:"My Slideshow",
-			description:"Memories of my last vacation.\n\nMusic by Jane Doe (CC-BY 2019)",
-			categoryID:"Travel",
-			privacyStatus:.public)
+			title:title,
+			description:description,
+			categoryID:categoryID,
+			tags:tags,
+			privacyStatus:privacyStatus)
 		
 		self.uploadID = controller.upload(item)
 	}

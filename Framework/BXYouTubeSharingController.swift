@@ -116,7 +116,8 @@ public class BXYouTubeSharingController
 	{
 		// TODO: implement
 
-		completionHandler([])
+		let sample = Category(localizedName:"Test", identifier:"test")
+		completionHandler([sample])
 	}
 	
 

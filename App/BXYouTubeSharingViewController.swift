@@ -26,6 +26,7 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 	@IBOutlet weak var categoryPicker:UIPickerView!
 	@IBOutlet weak var privacyPicker:UIPickerView!
 	@IBOutlet weak var shareButton:UIButton!
+	@IBOutlet weak var progressView:UIProgressView!
 
 	/// The URL of the selected file
 	
@@ -53,6 +54,8 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 	override func viewDidLoad()
 	{
 		super.viewDidLoad()
+		
+		self.progressView.progress = 0.0
 		
 		BXYouTubeSharingController.shared.categories(for:"en")
 		{
@@ -175,7 +178,7 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 	
 	func didContinueUpload(identifier: BXYouTubeSharingController.UploadID, progress:Double)
 	{
-		// Display progress
+		self.progressView.progress = Float(progress)
 	}
 	
 	func didFinishUpload(identifier: BXYouTubeSharingController.UploadID, error:Error?)

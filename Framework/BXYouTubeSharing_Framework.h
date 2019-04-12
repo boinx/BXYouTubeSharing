@@ -3,7 +3,7 @@
 //  BXYouTubeSharing-Framework
 //
 //  Created by Peter Baumgartner on 11.04.19.
-//  Copyright © 2019 Peter Baumgartner. All rights reserved.
+//  Copyright © 2019 Boinx Software Ltd. & Imagine GbR. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

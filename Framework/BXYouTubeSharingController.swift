@@ -1,7 +1,7 @@
 //**********************************************************************************************************************
 //
 //  BXYouTubeSharingAppDelegate.swift
-//  Copyright © 2019 Peter Baumgartner. All rights reserved.
+//  Copyright © 2019 Boinx Software Ltd. & Imagine GbR. All rights reserved.
 //
 //**********************************************************************************************************************
 

@@ -309,7 +309,7 @@
 				DefaultBuildSystemTypeForWorkspace = Original;
 				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = "Peter Baumgartner";
+				ORGANIZATIONNAME = "Boinx Software Ltd. & Imagine GbR";
 				TargetAttributes = {
 					D05AB18C225F48F300205C7F = {
 						CreatedOnToolsVersion = 10.2;

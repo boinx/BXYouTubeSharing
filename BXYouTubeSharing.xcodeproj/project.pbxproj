@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */; };
+		48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */; };
 		D05AB190225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB18F225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift */; };
 		D05AB192225F48F300205C7F /* BXYouTubeSharingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB191225F48F300205C7F /* BXYouTubeSharingViewController.swift */; };
 		D05AB195225F48F300205C7F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05AB193225F48F300205C7F /* Main.storyboard */; };
@@ -17,11 +19,10 @@
 		D05AB1B6225F49AA00205C7F /* BXYouTubeSharing_Framework.h in Headers */ = {isa = PBXBuildFile; fileRef = D05AB1A6225F49AA00205C7F /* BXYouTubeSharing_Framework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D05AB1B9225F49AA00205C7F /* BXYouTubeSharing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05AB1A4225F49AA00205C7F /* BXYouTubeSharing.framework */; };
 		D05AB1BA225F49AA00205C7F /* BXYouTubeSharing.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D05AB1A4225F49AA00205C7F /* BXYouTubeSharing.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D05AB1C9225F837C00205C7F /* BXYouTubeSharingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB1C7225F810200205C7F /* BXYouTubeSharingController.swift */; };
+		D05AB1C9225F837C00205C7F /* BXYouTubeUploadController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */; };
 		D05AB1D2225F913700205C7F /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB1D1225F913700205C7F /* ShareViewController.swift */; };
 		D05AB1D5225F913700205C7F /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05AB1D3225F913700205C7F /* MainInterface.storyboard */; };
 		D05AB1D9225F913700205C7F /* BXYouTubeSharing-Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D05AB1CF225F913700205C7F /* BXYouTubeSharing-Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		D0987D4A22608B2100BCF772 /* BXYouTubeSharingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB1C7225F810200205C7F /* BXYouTubeSharingController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeNetworkHelpers.swift; sourceTree = "<group>"; };
+		48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+fileSize.swift"; sourceTree = "<group>"; };
 		D05AB18D225F48F300205C7F /* BXYouTubeSharing-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BXYouTubeSharing-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05AB18F225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharingAppDelegate.swift; sourceTree = "<group>"; };
 		D05AB191225F48F300205C7F /* BXYouTubeSharingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharingViewController.swift; sourceTree = "<group>"; };
@@ -97,7 +100,7 @@
 		D05AB1C3225F6E7000205C7F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		D05AB1C5225F6E7400205C7F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D05AB1C6225F766100205C7F /* BXYouTubeSharing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BXYouTubeSharing.xcconfig; sourceTree = SOURCE_ROOT; };
-		D05AB1C7225F810200205C7F /* BXYouTubeSharingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharingController.swift; sourceTree = "<group>"; };
+		D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXYouTubeUploadController.swift; sourceTree = "<group>"; };
 		D05AB1CF225F913700205C7F /* BXYouTubeSharing-Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "BXYouTubeSharing-Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05AB1D1225F913700205C7F /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		D05AB1D4225F913700205C7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -138,6 +141,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		48B96C8B2260E22700E89EF6 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */,
+				48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		D05AB12A225DF48100205C7F = {
 			isa = PBXGroup;
 			children = (
@@ -180,7 +192,8 @@
 			children = (
 				D05AB1A7225F49AA00205C7F /* Info.plist */,
 				D05AB1A6225F49AA00205C7F /* BXYouTubeSharing_Framework.h */,
-				D05AB1C7225F810200205C7F /* BXYouTubeSharingController.swift */,
+				D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */,
+				48B96C8B2260E22700E89EF6 /* Helpers */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -396,7 +409,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D05AB1C9225F837C00205C7F /* BXYouTubeSharingController.swift in Sources */,
+				48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */,
+				48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */,
+				D05AB1C9225F837C00205C7F /* BXYouTubeUploadController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,7 +427,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0987D4A22608B2100BCF772 /* BXYouTubeSharingController.swift in Sources */,
 				D05AB1D2225F913700205C7F /* ShareViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

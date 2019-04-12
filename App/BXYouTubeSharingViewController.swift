@@ -34,18 +34,18 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 
 	/// The list of YouTube categories
 	
-	var categories:[BXYouTubeSharingController.Category] = []
+	var categories:[BXYouTubeUploadController.Category] = []
 	{
 		didSet { categoryPicker.reloadAllComponents() }
 	}
 	
 	/// The list of YouTube privacy statuses
 	
-	var privacyStatuses:[BXYouTubeSharingController.Item.PrivacyStatus] = [.private,.public,.unlisted]
+	var privacyStatuses:[BXYouTubeUploadController.Item.PrivacyStatus] = BXYouTubeUploadController.Item.PrivacyStatus.allCases
 	
 	/// This token identifies the upload
 	
-	var uploadID: BXYouTubeSharingController.UploadID? = nil
+	var uploadID: BXYouTubeUploadController.UploadID? = nil
 	
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 		
 		self.progressView.progress = 0.0
 		
-		BXYouTubeSharingController.shared.categories(for:"en")
+		BXYouTubeUploadController.shared.categories(for:"en")
 		{
 			categories in
 			self.categories = categories
@@ -152,11 +152,11 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 		let categoryIndex = categoryPicker.selectedRow(inComponent:0)
 		let categoryID = self.categories[categoryIndex].identifier
 
-		let controller = BXYouTubeSharingController.shared
+		let controller = BXYouTubeUploadController.shared
 		controller.accessToken = "•••••••••••••••••••••••••••"
 		controller.delegate = self
 
-		let item = BXYouTubeSharingController.Item(
+		let item = BXYouTubeUploadController.Item(
 			url:url,
 			title:title,
 			description:description,
@@ -171,17 +171,17 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	func didStartUpload(identifier: BXYouTubeSharingController.UploadID)
+	func didStartUpload(identifier: BXYouTubeUploadController.UploadID)
 	{
 
 	}
 	
-	func didContinueUpload(identifier: BXYouTubeSharingController.UploadID, progress:Double)
+	func didContinueUpload(identifier: BXYouTubeUploadController.UploadID, progress:Double)
 	{
 		self.progressView.progress = Float(progress)
 	}
 	
-	func didFinishUpload(identifier: BXYouTubeSharingController.UploadID, error:Error?)
+	func didFinishUpload(identifier: BXYouTubeUploadController.UploadID, error:Error?)
 	{
 		if let error = error
 		{

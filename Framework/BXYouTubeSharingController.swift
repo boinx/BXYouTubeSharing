@@ -7,9 +7,6 @@
 
 
 import Foundation
-#if os(iOS)
-import UIKit
-#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -18,104 +15,128 @@ import UIKit
 public class BXYouTubeSharingController
 {
 
-	/// The Credential identify both the host application and the user
-	///
-	/// Without this info uploading to YouTube is not possible. More info at:
-	/// https://developers.google.com/youtube/v3/
-	/// http://www.codingtofu.com/post/68053276589/posting-video-to-youtube
-
-	public struct Credentials : Codable
-	{
-		/// Host application identifier
-		
-		public var clientID:String = ""
-		
-		/// Host application secret
-		
-		public var clientSecret:String = ""
-		
-		/// User account
-		
-		public var account:String = ""
-		
-		/// User password
-		
-		public var password:String = ""
-		
-		/// Creates a Credentials struct
-		
-		public init(clientID:String = "", clientSecret:String = "", account:String = "", password:String = "")
-		{
-			self.clientID = clientID
-			self.clientSecret = clientSecret
-			self.account = account
-			self.password = password
-		}
-	}
+	/// Convenience singleton instance of this controller
 	
-	public var credentials = Credentials()
+	public static let shared = BXYouTubeSharingController()
+	
+	/// The user access token used to authenticate all requests made by this controller
+	
+	public var accessToken:String? = nil
 
-
+	/// The delegate for UI feedback
+	
+	public weak var delegate:BXYouTubeSharingDelegate? = nil
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
+
+	// MARK: -
 
 	/// An Item specifies the movie file to be uploaded and the metadata that needs to be attached
 	
 	public struct Item : Codable
 	{
-		// File to upload
+		/// File to upload
 		
 		public var url:URL? = nil
 		
-		// The video title
+		/// The video title
 		
 		public var title:String = ""
 
-		// The video description - this should also include any music credits
+		/// The video description - this should also include any music credits
 		
 		public var description:String = ""
 		
-		// The category identifier (valid identifiers need to be retrieved from YouTube)
+		/// The category identifier (valid identifiers need to be retrieved from YouTube)
 		
 		public var categoryID:String = ""
 		
-		// Set to true if this video should only be visible to the logged in user
+		/// An optional list of tags for the uploaded video
 		
-		public var isPrivate:Bool = false
+		public var tags:[String] = []
+		
+		/// The privacy level for the uploaded video
+		
+		public enum PrivacyStatus : String,Codable
+		{
+			case `private`
+			case `public`
+			case unlisted
+		}
+		
+		public var privacyStatus:PrivacyStatus = .private
 
+		/// Specifies whether YouTube applies automatic color correction to the video
+		
+		public var autoLevels:Bool = false
+		
+		/// Specifies whether YouTube applies motion stabilization to the video
+		
+		public var stabilize:Bool = false
+		
 		/// Creates an Item struct
 		
-		public init(url:URL? = nil, title:String = "", description:String = "", categoryID:String = "", isPrivate:Bool = false)
+		public init(url:URL? = nil, title:String = "", description:String = "", categoryID:String = "", tags:[String] = [], privacyStatus:PrivacyStatus = .private, autoLevels:Bool = false, stabilize:Bool = false)
 		{
 			self.url = url
 			self.title = title
 			self.description = description
 			self.categoryID = categoryID
-			self.isPrivate = isPrivate
+			self.tags = tags
+			self.privacyStatus = privacyStatus
+			self.autoLevels = autoLevels
+			self.stabilize = stabilize
 		}
 	}
 	
-	public var item = Item()
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: -
+	
+	public struct Category
+	{
+		/// The localized name of the category (suitable for displaying in the user interface)
+		
+		public var localizedName:String = ""
+		
+		/// The unique identifier for a category
+		
+		public var identifier:String = ""
+	}
+	
+	
+	/// Retrieves the list of categories that are known to YouTube. Specify a language code like "en" or "de"
+	/// to localize the names.
+	
+	public func categories(for languageCode:String, completionHandler: ([Category])->Void)
+	{
+		// TODO: implement
+
+		completionHandler([])
+	}
 	
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// A singleton instance of this controller
+	// MARK: -
 	
-	public static let shared = BXYouTubeSharingController()
-	
-	// Delegate for UI feedback
-	
-	public weak var delegate:BXYouTubeSharingDelegate? = nil
-	
-	// Optionally set a reference to the current UIViewController
-	
-	public weak var currentViewController:UIViewController? = nil
+	enum Error : Swift.Error
+	{
+		case invalidAccessToken
+		// ...
+		case unknown
+	}
 	
 	
 //----------------------------------------------------------------------------------------------------------------------
 
+
+	// MARK: -
 
 	/// A unique identifier for an upload operation. Store it if you want to cancel the upload later.
 	
@@ -124,16 +145,10 @@ public class BXYouTubeSharingController
 	
 	/// Starts the upload process
 	
-	@discardableResult public func startUpload() -> UploadID?
+	@discardableResult public func upload(_ item:Item, notifySubscribers:Bool = true) -> UploadID?
 	{
-		guard let srcURL = self.item.url else { return nil }
+		guard let srcURL = item.url else { return nil }
 
-		// This is just a temporary dummy implementation (delete later)
-		
-		let controller = UIDocumentPickerViewController(urls:[srcURL], in:.moveToService)
-		controller.allowsMultipleSelection = false
-		currentViewController?.present(controller, animated:true, completion:nil)
-		
 		// TODO: implement
 
 		return UUID().uuidString 
@@ -151,6 +166,8 @@ public class BXYouTubeSharingController
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+// MARK: -
 
 /// The BXYouTubeSharingDelegate notifies the client app of upload progress
 

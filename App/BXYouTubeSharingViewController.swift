@@ -43,7 +43,7 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 	}
 	
 	
-	/// Store the URL of the selected file and enables the Share button
+	/// Stores the URL of the selected file and enables the Share button
 	
    	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
     {
@@ -74,23 +74,18 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 		guard let url = url else { return }
 		
 		let controller = BXYouTubeSharingController.shared
+		controller.accessToken = "•••••••••••••••••••••••••••"
 		controller.delegate = self
 		controller.currentViewController = self
 
-		controller.credentials = BXYouTubeSharingController.Credentials(
-			clientID:"UUID.apps.googleusercontent.com",
-			clientSecret:"UUID",
-			account:"johndoe@gmail.com",
-			password:"••••••••••")
-
-		controller.item = BXYouTubeSharingController.Item(
+		let item = BXYouTubeSharingController.Item(
 			url:url,
 			title:"My Slideshow",
-			description:"Memories of my last vacation.\n\nMusic by Jane Doe\n\nCC-BY 2019",
+			description:"Memories of my last vacation.\n\nMusic by Jane Doe (CC-BY 2019)",
 			categoryID:"Travel",
-			isPrivate:false)
+			privacyStatus:.public)
 		
-		controller.startUpload()
+		self.uploadID = controller.upload(item)
 	}
 
 
@@ -99,7 +94,7 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 
 	func didStartUpload(identifier: BXYouTubeSharingController.UploadID)
 	{
-		self.uploadID = identifier
+
 	}
 	
 	func didContinueUpload(identifier: BXYouTubeSharingController.UploadID, progress:Double)

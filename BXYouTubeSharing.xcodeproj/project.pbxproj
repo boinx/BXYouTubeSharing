@@ -21,7 +21,7 @@
 		D05AB1D2225F913700205C7F /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB1D1225F913700205C7F /* ShareViewController.swift */; };
 		D05AB1D5225F913700205C7F /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05AB1D3225F913700205C7F /* MainInterface.storyboard */; };
 		D05AB1D9225F913700205C7F /* BXYouTubeSharing-Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D05AB1CF225F913700205C7F /* BXYouTubeSharing-Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		D05AB1DF225F926700205C7F /* BXYouTubeSharing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D05AB1A4225F49AA00205C7F /* BXYouTubeSharing.framework */; };
+		D0987D4A22608B2100BCF772 /* BXYouTubeSharingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB1C7225F810200205C7F /* BXYouTubeSharingController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,7 +132,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D05AB1DF225F926700205C7F /* BXYouTubeSharing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,9 +142,9 @@
 			isa = PBXGroup;
 			children = (
 				D05AB1C6225F766100205C7F /* BXYouTubeSharing.xcconfig */,
+				D05AB18E225F48F300205C7F /* App */,
 				D05AB1A5225F49AA00205C7F /* Framework */,
 				D05AB1B2225F49AA00205C7F /* Tests */,
-				D05AB18E225F48F300205C7F /* App */,
 				D05AB1D0225F913700205C7F /* Extension */,
 				D05AB134225DF48100205C7F /* Products */,
 				D05AB1DE225F926700205C7F /* Frameworks */,
@@ -340,9 +339,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				D05AB18C225F48F300205C7F /* BXYouTubeSharing-App */,
 				D05AB1A3225F49AA00205C7F /* BXYouTubeSharing-Framework */,
 				D05AB1AB225F49AA00205C7F /* BXYouTubeSharing-Tests */,
-				D05AB18C225F48F300205C7F /* BXYouTubeSharing-App */,
 				D05AB1CE225F913700205C7F /* BXYouTubeSharing-Extension */,
 			);
 		};
@@ -413,6 +412,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0987D4A22608B2100BCF772 /* BXYouTubeSharingController.swift in Sources */,
 				D05AB1D2225F913700205C7F /* ShareViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

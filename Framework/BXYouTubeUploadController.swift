@@ -59,7 +59,7 @@ public class BXYouTubeUploadController: NSObject
 		
 		/// The privacy level for the uploaded video
 		
-		public enum PrivacyStatus : String, Codable
+		public enum PrivacyStatus : String, Codable, CaseIterable
 		{
 			case `private`
 			case `public`
@@ -204,7 +204,12 @@ public class BXYouTubeUploadController: NSObject
         }
 	}
  
-    private lazy var queue = OperationQueue()
+    private lazy var queue: OperationQueue =
+    {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
  
     private lazy var foregroundSession: URLSession =
     {

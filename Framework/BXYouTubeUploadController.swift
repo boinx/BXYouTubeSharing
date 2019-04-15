@@ -116,7 +116,7 @@ public class BXYouTubeUploadController: NSObject
 	{
 		// TODO: implement
 
-		let sample = Category(localizedName:"Test", identifier:"test")
+		let sample = Category(localizedName:"Reisen & Events", identifier:"19")
 		completionHandler([sample])
 	}
 	
@@ -166,7 +166,7 @@ public class BXYouTubeUploadController: NSObject
   
         let videoCreationRequest = BXYouTubeNetworkHelpers.videoCreationRequest(for: item, ofSize: fileSize, accessToken: accessToken)
   
-        self.foregroundSession.dataTask(with: videoCreationRequest)
+        let creationTask = self.foregroundSession.dataTask(with: videoCreationRequest)
         { [weak self] (data, response, error) in
             if let self = self,
                let httpResponse = response as? HTTPURLResponse,
@@ -184,6 +184,7 @@ public class BXYouTubeUploadController: NSObject
                 task.resume()
             }
         }
+        creationTask.resume()
 
 		return uploadID
 	}

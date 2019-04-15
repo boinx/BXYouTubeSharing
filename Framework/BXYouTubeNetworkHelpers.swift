@@ -24,7 +24,7 @@ internal class BXYouTubeNetworkHelpers
         var urlComponents = URLComponents(string: "https://www.googleapis.com/upload/youtube/v3/videos")!
         
         urlComponents.queryItems = [
-            URLQueryItem(name: "part", value: "snippet,status,fileDetails,contentDetails"),
+            URLQueryItem(name: "part", value: "snippet,status"),
             URLQueryItem(name: "uploadType", value: "resumable")
         ]
         
@@ -33,7 +33,7 @@ internal class BXYouTubeNetworkHelpers
         request.httpMethod = "POST"
         
         // Set request headers for authentication and propper content types.
-        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authentication")
+        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
         request.setValue("\(fileSize)", forHTTPHeaderField: "X-Upload-Content-Length")
@@ -61,7 +61,7 @@ internal class BXYouTubeNetworkHelpers
         var request = URLRequest(url: location)
         
         // Set request headers for authentication and propper content types.
-        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authentication")
+        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
         request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
         request.setValue("\(fileSize)", forHTTPHeaderField: "Content-Length")
         

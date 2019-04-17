@@ -60,6 +60,8 @@ internal class BXYouTubeNetworkHelpers
     {
         var request = URLRequest(url: location)
         
+        request.httpMethod = "PUT"
+        
         // Set request headers for authentication and propper content types.
         request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
         request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")

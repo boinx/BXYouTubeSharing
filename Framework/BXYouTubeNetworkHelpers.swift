@@ -19,6 +19,25 @@ internal class BXYouTubeNetworkHelpers
     
     static let backgroundSessionIdentifier = "com.boinx.BXYouTubeSharing.backgroundSession"
     
+    static func categoriesRequest(locale: Locale, accessToken: String) -> URLRequest
+    {
+        var urlComponents = URLComponents(string: "https://www.googleapis.com/youtube/v3/videoCategories")!
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "part", value: "snippet"),
+            URLQueryItem(name: "regionCode", value: locale.regionCode),
+            URLQueryItem(name: "hl", value: locale.identifier)
+        ]
+        
+        var request = URLRequest(url: urlComponents.url!)
+        
+        // Set request headers for authentication and propper content types.
+        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        return request
+    }
+    
     static func videoCreationRequest(for item: BXYouTubeUploadController.Item, ofSize fileSize: Int, accessToken: String) -> URLRequest
     {
         var urlComponents = URLComponents(string: "https://www.googleapis.com/upload/youtube/v3/videos")!

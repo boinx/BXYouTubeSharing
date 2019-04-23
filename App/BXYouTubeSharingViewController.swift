@@ -43,10 +43,6 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 	
 	var privacyStatuses:[BXYouTubeUploadController.Item.PrivacyStatus] = BXYouTubeUploadController.Item.PrivacyStatus.allCases
 	
-	/// This token identifies the upload
-	
-	var uploadID: BXYouTubeUploadController.UploadID? = nil
-	
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -164,31 +160,29 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 			tags:tags,
 			privacyStatus:privacyStatus)
 		
-		self.uploadID = controller.upload(item)
+		controller.upload(item)
 	}
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	func didStartUpload(identifier: BXYouTubeUploadController.UploadID)
+	func didStartUpload()
 	{
 
 	}
 	
-	func didContinueUpload(identifier: BXYouTubeUploadController.UploadID, progress:Double)
+	func didContinueUpload(progress:Double)
 	{
 		self.progressView.progress = Float(progress)
 	}
 	
-	func didFinishUpload(identifier: BXYouTubeUploadController.UploadID, error:Error?)
+	func didFinishUpload(error:Error?)
 	{
 		if let error = error
 		{
 			print("Error: \(error)")
 		}
-		
-		self.uploadID = nil
 	}
 
 }

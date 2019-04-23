@@ -131,6 +131,7 @@ public class BXYouTubeUploadController: NSObject
 		case invalidAccessToken
         case fileAccessError
         case userCanceled
+        case uploadAlreadyInProgress
         case uploadFailed(reason: String)
 		case other(underlyingError: Swift.Error?)
 	}
@@ -175,18 +176,31 @@ public class BXYouTubeUploadController: NSObject
 //----------------------------------------------------------------------------------------------------------------------
 
 
-	// MARK: -
+	// MARK: - Public API
 
 	/// Starts the upload process
 	
-	public func upload(_ item:Item, notifySubscribers:Bool = true)
+	public func upload(_ item:Item, notifySubscribers:Bool = true) throws
 	{
- 		guard let accessToken = self.accessToken else { return }
-		guard let fileSize = item.url.fileSize else { return }
+        // FIXME: uploadItem can be modified from the background queue
+        guard self.uploadItem == nil else
+        {
+            throw Error.uploadAlreadyInProgress
+        }
+ 		guard let accessToken = self.accessToken else
+        {
+            throw Error.invalidAccessToken
+        }
+		guard let fileSize = item.url.fileSize else
+        {
+            throw Error.fileAccessError
+        }
+        
+        self.uploadItem = item
 
-		// Notifiy delegate that upload is about to start, so that UI can be updated
+		// Notify delegate that upload is about to start, so that UI can be updated.
 		
-		self.delegate?.willStartUpload()
+        self.dispatchToDelegate { $0.willStartUpload() }
 
         // TODO: Pass through notifySubscribers option
   
@@ -196,65 +210,128 @@ public class BXYouTubeUploadController: NSObject
         {
         	[weak self] (data, response, error) in
 			
-            if let self = self,
-               let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200,
-               let uploadLocation = httpResponse.allHeaderFields["Location"] as? String,
-               let uploadURL = URL(string: uploadLocation)
+            guard let self = self else { return }
+            
+            if let error = error
             {
-            	DispatchQueue.main.async { self.delegate?.didStartUpload() }
+                self._resetState()
+                self.dispatchToDelegate { $0.didFinishUpload(error: Error.other(underlyingError: error)) }
+            }
+            else if let httpResponse = response as? HTTPURLResponse
+            {
+                if httpResponse.statusCode == 200,
+                   let uploadLocation = httpResponse.allHeaderFields["Location"] as? String,
+                   let uploadURL = URL(string: uploadLocation)
+                {
+                    self.dispatchToDelegate { $0.didStartUpload() }
 
-				self.uploadItem = item
-				self.uploadURL = uploadURL
-				self.uploadTask = self.startUploadTask()
+                    self.uploadURL = uploadURL
+                    self._startUploadTask()
+                }
+                else if let data = data,
+                        let jsonObj = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any],
+                        let errorObj = jsonObj["error"] as? [String: Any],
+                        let errorMessage = errorObj["message"] as? String
+                {
+                    self._resetState()
+                    self.dispatchToDelegate { $0.didFinishUpload(error: Error.uploadFailed(reason: errorMessage)) }
+                }
+            }
+            else
+            {
+                self._resetState()
+                self.dispatchToDelegate { $0.didFinishUpload(error: Error.other(underlyingError: nil)) }
             }
         }
-		
+        
         creationTask.resume()
 	}
+ 
+ 
+    /// Cancels the upload
+    
+    public func cancel()
+    {
+        self.queue.addOperation
+        {
+            [weak self] in
+            
+            guard let self = self else { return }
+            
+            self.uploadTask?.cancel()
+
+            self._resetState()
+            self.dispatchToDelegate { $0.didFinishUpload(error: Error.userCanceled) }
+        }
+    }
 	
+ 
+    // MARK: - Internal Methods
 	
-	private func startUploadTask() -> URLSessionUploadTask?
+	private func _startUploadTask()
 	{
-		guard let accessToken = self.accessToken else { return nil }
-		guard let item = self.uploadItem else { return nil }
-		guard let fileSize = item.url.fileSize else { return nil }
-		guard let uploadURL = self.uploadURL else { return nil }
+        assert(OperationQueue.current == self.queue, "BXYouTubeUploadController.\(#function) may only be called on self.queue")
+ 
+        self.uploadTask = nil
+ 
+		guard let accessToken = self.accessToken else { return }
+		guard let item = self.uploadItem else { return }
+		guard let fileSize = item.url.fileSize else { return }
+		guard let uploadURL = self.uploadURL else { return }
 
-		let videoUploadRequest = BXYouTubeNetworkHelpers.videoUploadRequest(for: item, ofSize: fileSize, location:uploadURL, accessToken: accessToken)
-		let uploadTask = self.backgroundSession.uploadTask(with: videoUploadRequest, fromFile: item.url)
-		uploadTask.resume()
-
-		return uploadTask
+        // Upload task may not be created on self.queue (which has a concurrency of 1 and therefore blocks).
+        DispatchQueue.main.async
+        {
+            let uploadRequest = BXYouTubeNetworkHelpers.videoUploadRequest(for: item, ofSize: fileSize, location: uploadURL, accessToken: accessToken)
+            let uploadTask = self.backgroundSession.uploadTask(with: uploadRequest, fromFile: item.url)
+            uploadTask.resume()
+            
+            self.queue.addOperation
+            {
+                self.uploadTask = uploadTask
+            }
+        }
 	}
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	/// Cancels the upload
-	
-	public func cancel()
-	{
-		self.uploadTask?.cancel()
-
-		self.retryCount = 0
-		self.uploadItem = nil
-		self.uploadURL = nil
-		self.uploadTask = nil
-
-		self.delegate?.didFinishUpload(error: BXYouTubeUploadController.Error.userCanceled)
-	}
+ 
+    private func _resetState()
+    {
+        assert(OperationQueue.current == self.queue, "BXYouTubeUploadController.\(#function) may only be called on self.queue")
+        
+        self.retryCount = 0
+        self.uploadItem = nil
+        self.uploadURL = nil
+        self.uploadTask = nil
+    }
+    
+    
+    // MARK: - Helper Methods
+    
+    private func dispatchToDelegate(closure: @escaping (BXYouTubeSharingDelegate) -> Void)
+    {
+        if Thread.isMainThread
+        {
+            if let delegate = self.delegate
+            {
+                closure(delegate)
+            }
+        }
+        else
+        {
+            DispatchQueue.main.async
+            {
+                [weak self] in
+                
+                self?.dispatchToDelegate(closure: closure)
+            }
+        }
+    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-extension BXYouTubeUploadController: URLSessionDelegate
-{
-    // None of the regular URLSessionDelegate methods are implemented as we don't expect to need them.
-}
-
+// MARK: - URLSessionTaskDelegate Implementation
 
 extension BXYouTubeUploadController: URLSessionTaskDelegate
 {
@@ -262,11 +339,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 	
     public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64)
     {
-        DispatchQueue.main.async
-        {
-        	[weak self] in
-            self?.delegate?.didContinueUpload(progress: task.progress)
-        }
+        self.dispatchToDelegate { $0.didContinueUpload(progress: task.progress) }
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Swift.Error?)
@@ -287,7 +360,11 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 				DispatchQueue.main.asyncAfter(deadline:.now()+delay)
 				{
 					[weak self] in
-					self?.uploadTask = self?.startUploadTask()
+                    
+                    self?.queue.addOperation
+                    {
+                        self?._startUploadTask()
+                    }
 				}
 			}
 			
@@ -295,17 +372,8 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			
 			else
 			{
-				DispatchQueue.main.async
-				{
-					[weak self] in
-					
-					let error = BXYouTubeUploadController.Error.uploadFailed(reason:"Too many retries!")
-					self?.delegate?.didFinishUpload(error: error)
-
-					self?.uploadItem = nil
-					self?.uploadURL = nil
-					self?.uploadTask = nil
-				}
+                self._resetState()
+                self.dispatchToDelegate { $0.didFinishUpload(error: Error.uploadFailed(reason:"Too many retries!")) }
 			}
 		}
 		
@@ -313,19 +381,17 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 		
 		else
 		{
-			DispatchQueue.main.async
-			{
-				[weak self] in
-				
-				self?.delegate?.didFinishUpload(error: nil)
-
-				self?.uploadItem = nil
-				self?.uploadURL = nil
-				self?.uploadTask = nil
-			}
+            self._resetState()
+            self.dispatchToDelegate { $0.didFinishUpload(error: nil) }
 		}
 		
     }
+}
+
+
+extension BXYouTubeUploadController: URLSessionDelegate
+{
+    // None of the regular URLSessionDelegate methods are implemented as we don't expect to need them.
 }
 
 

@@ -160,7 +160,7 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 			tags:tags,
 			privacyStatus:privacyStatus)
 		
-		controller.upload(item)
+		try! controller.upload(item)
 	}
 
 
@@ -169,16 +169,18 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 
 	func didStartUpload()
 	{
-
+        print("Did Start upload")
 	}
-	
-	func didContinueUpload(progress:Double)
-	{
-		self.progressView.progress = Float(progress)
-	}
+ 
+    func didContinueUpload(progress: Progress)
+    {
+        self.progressView.observedProgress = progress
+    }
 	
 	func didFinishUpload(error:Error?)
 	{
+        self.progressView.observedProgress = nil
+        
 		if let error = error
 		{
 			print("Error: \(error)")

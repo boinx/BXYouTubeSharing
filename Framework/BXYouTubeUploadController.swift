@@ -200,7 +200,7 @@ public class BXYouTubeUploadController: NSObject
 
 		// Notify delegate that upload is about to start, so that UI can be updated.
 		
-        self.dispatchToDelegate { $0.willStartUpload() }
+        self.delegate?.onMainThread { $0.willStartUpload() }
 
         // TODO: Pass through notifySubscribers option
   
@@ -215,7 +215,7 @@ public class BXYouTubeUploadController: NSObject
             if let error = error
             {
                 self._resetState()
-                self.dispatchToDelegate { $0.didFinishUpload(error: Error.other(underlyingError: error)) }
+                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.other(underlyingError: error)) }
             }
             else if let httpResponse = response as? HTTPURLResponse
             {
@@ -223,7 +223,7 @@ public class BXYouTubeUploadController: NSObject
                    let uploadLocation = httpResponse.allHeaderFields["Location"] as? String,
                    let uploadURL = URL(string: uploadLocation)
                 {
-                    self.dispatchToDelegate { $0.didStartUpload() }
+                    self.delegate?.onMainThread { $0.didStartUpload() }
 
                     self.uploadURL = uploadURL
                     self._startUploadTask()
@@ -234,13 +234,13 @@ public class BXYouTubeUploadController: NSObject
                         let errorMessage = errorObj["message"] as? String
                 {
                     self._resetState()
-                    self.dispatchToDelegate { $0.didFinishUpload(error: Error.uploadFailed(reason: errorMessage)) }
+                    self.delegate?.onMainThread { $0.didFinishUpload(error: Error.uploadFailed(reason: errorMessage)) }
                 }
             }
             else
             {
                 self._resetState()
-                self.dispatchToDelegate { $0.didFinishUpload(error: Error.other(underlyingError: nil)) }
+                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.other(underlyingError: nil)) }
             }
         }
         
@@ -261,7 +261,7 @@ public class BXYouTubeUploadController: NSObject
             self.uploadTask?.cancel()
 
             self._resetState()
-            self.dispatchToDelegate { $0.didFinishUpload(error: Error.userCanceled) }
+            self.delegate?.onMainThread { $0.didFinishUpload(error: Error.userCanceled) }
         }
     }
 	
@@ -303,35 +303,13 @@ public class BXYouTubeUploadController: NSObject
         self.uploadTask = nil
     }
     
-    
-    // MARK: - Helper Methods
-    
-    private func dispatchToDelegate(closure: @escaping (BXYouTubeSharingDelegate) -> Void)
-    {
-        if Thread.isMainThread
-        {
-            if let delegate = self.delegate
-            {
-                closure(delegate)
-            }
-        }
-        else
-        {
-            DispatchQueue.main.async
-            {
-                [weak self] in
-                
-                self?.dispatchToDelegate(closure: closure)
-            }
-        }
-    }
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
-// MARK: - URLSessionTaskDelegate Implementation
+// MARK: - URLSessionTaskDelegate
 
 extension BXYouTubeUploadController: URLSessionTaskDelegate
 {
@@ -339,7 +317,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 	
     public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64)
     {
-        self.dispatchToDelegate { $0.didContinueUpload(progress: task.progress) }
+        self.delegate?.onMainThread { $0.didContinueUpload(progress: task.progress) }
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Swift.Error?)
@@ -373,7 +351,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			else
 			{
                 self._resetState()
-                self.dispatchToDelegate { $0.didFinishUpload(error: Error.uploadFailed(reason:"Too many retries!")) }
+                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.uploadFailed(reason:"Too many retries!")) }
 			}
 		}
 		
@@ -382,7 +360,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 		else
 		{
             self._resetState()
-            self.dispatchToDelegate { $0.didFinishUpload(error: nil) }
+            self.delegate?.onMainThread { $0.didFinishUpload(error: nil) }
 		}
 		
     }
@@ -403,7 +381,7 @@ extension BXYouTubeUploadController: URLSessionDelegate
 /// The BXYouTubeSharingDelegate notifies the client app of upload progress. All delegate calls are guaranteed
 /// to be called on the main queue.
 
-public protocol BXYouTubeSharingDelegate : class
+public protocol BXYouTubeSharingDelegate : BXMainThreadDelegate
 {
 	func willStartUpload()			// Called immediately, can be used to disable UI
 	func didStartUpload()			// Called asynchronously once communication with YouTube is established

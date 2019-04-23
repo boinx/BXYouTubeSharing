@@ -237,7 +237,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
         
         DispatchQueue.main.async
         { [weak self] in
-            self?.delegate?.didContinueUpload(identifier: uploadID, progress: task.progress.fractionCompleted)
+            self?.delegate?.didContinueUpload(identifier: uploadID, progress: task.progress)
         }
     }
     
@@ -266,14 +266,14 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 public protocol BXYouTubeSharingDelegate : class
 {
 	func didStartUpload(identifier: BXYouTubeUploadController.UploadID)
-	func didContinueUpload(identifier: BXYouTubeUploadController.UploadID, progress:Double)
+	func didContinueUpload(identifier: BXYouTubeUploadController.UploadID, progress:Progress)
 	func didFinishUpload(identifier: BXYouTubeUploadController.UploadID, error:Error?)
 }
 
 public extension BXYouTubeSharingDelegate
 {
 	func didStartUpload(identifier: BXYouTubeUploadController.UploadID) {}
-	func didContinueUpload(identifier: BXYouTubeUploadController.UploadID, progress:Double) {}
+	func didContinueUpload(identifier: BXYouTubeUploadController.UploadID, progress:Progress) {}
 	func didFinishUpload(identifier: BXYouTubeUploadController.UploadID, error:Error?) {}
 }
 

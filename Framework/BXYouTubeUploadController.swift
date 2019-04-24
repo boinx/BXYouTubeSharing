@@ -1,7 +1,7 @@
 //**********************************************************************************************************************
 //
 //  BXYouTubeUploadController.swift
-//  Copyright © 2019 Boinx Software Ltd. & Imagine GbR. All rights reserved.
+//  Copyright ©2019 Boinx Software Ltd. & Imagine GbR. All rights reserved.
 //
 //**********************************************************************************************************************
 

@@ -30,10 +30,8 @@ public extension BXMainThreadDelegate
 
 	/// Call delegate method through this helper function to guarantee that they are always called on the main thread.
     /// ## Example
-    /// ```
-	///	self.delegate?.onMainThread { $0.willStartUpload() }
-	///	self.delegate?.onMainThread { $0.didFinishUpload(error:nil) }
-    /// ```
+  	///		self.delegate?.onMainThread { $0.willStartUpload() }
+	///		self.delegate?.onMainThread { $0.didFinishUpload(error:nil) }
 	/// - parameter closure: The closure performs that actual delegate call. The argument $0 is the reference to the delegate itself.
 
     func onMainThread(_ closure: @escaping (Self)->Void)

@@ -14,7 +14,7 @@ import BXYouTubeSharing
 //----------------------------------------------------------------------------------------------------------------------
 
 
-class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate,BXYouTubeSharingDelegate,UIPickerViewDataSource,UIPickerViewDelegate
+class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegate, UIPickerViewDataSource, UIPickerViewDelegate
 {
 	// Outlets
 	
@@ -53,11 +53,19 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 		
 		self.progressView.progress = 0.0
 		
-		BXYouTubeUploadController.shared.categories(for:"en")
-		{
-			categories in
-			self.categories = categories
-		}
+		BXYouTubeUploadController.shared.categories(for: "fr", completionHandler: { (categories, error) in
+            if let error = error
+            {
+                print("error fetching categories \(error)")
+            }
+            else if !categories.isEmpty
+            {
+                self.categories = categories
+            }
+        })
+  
+        self.url = Bundle.main.url(forResource: "movie", withExtension: "mov")
+        self.shareButton.isEnabled = true
 	}
 
 
@@ -134,7 +142,15 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 
 //----------------------------------------------------------------------------------------------------------------------
 
-
+    @IBAction func login(_ sender: Any)
+    {
+        let controller = BXYouTubeAuthenticationController.shared!
+        
+        controller.delegate = self
+        
+        controller.login()
+    }
+    
 	/// Shares the selected file
 	
 	@IBAction func share(_ sender:Any!)
@@ -149,7 +165,8 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 		let categoryID = self.categories[categoryIndex].identifier
 
 		let controller = BXYouTubeUploadController.shared
-		controller.accessToken = "•••••••••••••••••••••••••••"
+//		controller.accessToken = "•••••••••••••••••••••••••••"
+        controller.accessToken = "1234ya29.Glz0BqvrCbdJJLqjTlb8xwbQBwXi7FtjE1HTmI3HOx4I6u8H-LB0rpHAzEmnXrocD7W-ILPvVng05SXF3zgStZLMp2-IK1SBtSUAvDfqFT_If11NenI_ilzxeFaP_w"
 		controller.delegate = self
 
 		let item = BXYouTubeUploadController.Item(
@@ -162,11 +179,56 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 		
 		try! controller.upload(item)
 	}
-
+ 
+    private var loginAlert: UIAlertController?
+}
 
 //----------------------------------------------------------------------------------------------------------------------
 
 
+
+extension BXYouTubeSharingViewController: BXYouTubeAuthenticationControllerDelegate
+{
+    func youTubeAuthenticationControllerWillLogIn(_ authenticationController: BXYouTubeAuthenticationController)
+    {
+        if self.loginAlert != nil { return }
+    
+        let alert = UIAlertController(title: "Logging in with Safari", message: "Please complete the login process to YouTube in Safari.",  preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Go to Safari", style: .default, handler: { (action) in
+            self.loginAlert = nil;
+            BXYouTubeAuthenticationController.shared!.login()
+        }))
+    
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
+            self.loginAlert = nil;
+            alert.dismiss(animated: true, completion: nil)
+        }))
+    
+        self.loginAlert = alert
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5)
+        {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func youTubeAuthenticationControllerDidLogIn(_ authenticationController: BXYouTubeAuthenticationController, error: BXYouTubeAuthenticationController.Error?)
+    {
+        self.loginAlert?.dismiss(animated: true, completion: {
+            self.loginAlert = nil
+            
+            if let error = error
+            {
+                let errorAlert = UIAlertController(title: "Login Error", message: error.localizedDescription, preferredStyle: .alert)
+                self.present(errorAlert, animated: true, completion: nil)
+            }
+        })
+    }
+}
+
+extension BXYouTubeSharingViewController: BXYouTubeSharingDelegate
+{
 	func didStartUpload()
 	{
         print("Did Start upload")
@@ -186,7 +248,6 @@ class BXYouTubeSharingViewController : UIViewController,UIDocumentPickerDelegate
 			print("Error: \(error)")
 		}
 	}
-
 }
 
 

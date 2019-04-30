@@ -11,22 +11,16 @@ import Foundation
 
 internal class BXYouTubeNetworkHelpers
 {
-//    static var backgroundSession: URLSession =
-//    {
-//        let configuration = URLSessionConfiguration.background(withIdentifier: "com.boinx.BXYouTubeSharing.backgroundSession")
-//        return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-//    }()
-    
     static let backgroundSessionIdentifier = "com.boinx.BXYouTubeSharing.backgroundSession"
     
-    static func categoriesRequest(locale: Locale, accessToken: String) -> URLRequest
+    static func categoriesRequest(languageCode: String, accessToken: String) -> URLRequest
     {
         var urlComponents = URLComponents(string: "https://www.googleapis.com/youtube/v3/videoCategories")!
         
         urlComponents.queryItems = [
             URLQueryItem(name: "part", value: "snippet"),
-            URLQueryItem(name: "regionCode", value: locale.regionCode),
-            URLQueryItem(name: "hl", value: locale.identifier)
+            URLQueryItem(name: "regionCode", value: Locale.current.regionCode),
+            URLQueryItem(name: "hl", value: languageCode)
         ]
         
         var request = URLRequest(url: urlComponents.url!)

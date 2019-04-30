@@ -101,23 +101,111 @@ public class BXYouTubeUploadController: NSObject
 	{
 		/// The localized name of the category (suitable for displaying in the user interface)
 		
-		public var localizedName:String = ""
+		public let localizedName:String
 		
 		/// The unique identifier for a category
 		
-		public var identifier:String = ""
+		public let identifier:String
+  
+        public let assignable: Bool
+  
+        init(localizedName: String, identifier: String, assignable: Bool)
+        {
+            self.localizedName = localizedName
+            self.identifier = identifier
+            self.assignable = assignable
+        }
+  
+        /**
+         Sample dict:
+         
+         {
+            "snippet": {
+                "assignable": true,
+                "channelId": "UCBR8-60-B28hp2BmDPdntcQ",
+                "title": "Film & Animation"
+            },
+            "kind": "youtube#videoCategory",
+            "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/Xy1mB4_yLrHy_BmKmPBggty2mZQ\"",
+            "id": "1"
+         }
+        */
+        init?(withResponse dict: [String: Any])
+        {
+            guard let id = dict["id"] as? String,
+                  let snippet = dict["snippet"] as? [String: Any],
+                  let title = snippet["title"] as? String,
+                  let assignable = snippet["assignable"] as? Bool
+            else { return nil }
+            
+            self.init(localizedName: title, identifier: id, assignable: assignable)
+        }
 	}
 	
 	
 	/// Retrieves the list of categories that are known to YouTube. Specify a language code like "en" or "de"
 	/// to localize the names.
 	
-	public func categories(for languageCode:String, completionHandler: ([Category])->Void)
+	public func categories(for languageCode:String, completionHandler: @escaping ([Category], Error?)->Void, maxRetries: Int = 3)
 	{
-		// TODO: implement
-
-		let sample = Category(localizedName:"Reisen & Events", identifier:"19")
-		completionHandler([sample])
+        guard let accessToken = self.accessToken else
+        {
+            BXYouTubeAuthenticationController.shared?.requestAccessToken(completionHandler: { (accessToken, error) in
+                self.accessToken = accessToken
+                self.categories(for: languageCode, completionHandler: completionHandler, maxRetries: maxRetries - 1)
+            })
+            return
+        }
+        
+		let request = BXYouTubeNetworkHelpers.categoriesRequest(languageCode: languageCode, accessToken: accessToken)
+        
+        let task = self.foregroundSession.dataTask(with: request)
+        { (data, response, error) in
+            if let data = data,
+               let payload = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
+            {
+                if let errorDict = payload["error"] as? [String: Any],
+                   let errorCode = errorDict["code"] as? Int,
+                   let errorDescription = errorDict["message"] as? String
+                {
+                    if (errorCode == 401 || errorCode == 403) && maxRetries > 0
+                    {
+                        // Retry
+                        BXYouTubeAuthenticationController.shared?.requestAccessToken(completionHandler: { (accessToken, error) in
+                            self.accessToken = accessToken
+                            self.categories(for: languageCode, completionHandler: completionHandler, maxRetries: maxRetries - 1)
+                        })
+                        return
+                    }
+                    else
+                    {
+                        DispatchQueue.main.async
+                        {
+                            completionHandler([], Error.apiError(reason: errorDescription))
+                        }
+                        return
+                    }
+                }
+                else if let items = payload["items"] as? [[String: Any]]
+                {
+                    // Extract assignable categories from items.
+                    let categories = items.compactMap({ Category(withResponse: $0) })
+                                          .filter({ $0.assignable })
+                    
+                    DispatchQueue.main.async
+                    {
+                        completionHandler(categories, nil)
+                    }
+                    return
+                }
+                
+                DispatchQueue.main.async
+                {
+                    completionHandler([], Error.apiError(reason: "Invalid response"))
+                }
+            }
+        }
+        task.resume()
 	}
 	
 
@@ -132,7 +220,7 @@ public class BXYouTubeUploadController: NSObject
         case fileAccessError
         case userCanceled
         case uploadAlreadyInProgress
-        case uploadFailed(reason: String)
+        case apiError(reason: String)
 		case other(underlyingError: Swift.Error?)
 	}
 	
@@ -234,7 +322,7 @@ public class BXYouTubeUploadController: NSObject
                         let errorMessage = errorObj["message"] as? String
                 {
                     self._resetState()
-                    self.delegate?.onMainThread { $0.didFinishUpload(error: Error.uploadFailed(reason: errorMessage)) }
+                    self.delegate?.onMainThread { $0.didFinishUpload(error: Error.apiError(reason: errorMessage)) }
                 }
             }
             else
@@ -280,7 +368,7 @@ public class BXYouTubeUploadController: NSObject
 		guard let uploadURL = self.uploadURL else { return }
 
         // Upload task may not be created on self.queue (which has a concurrency of 1 and therefore blocks).
-        DispatchQueue.main.async
+        DispatchQueue.background.async
         {
             let uploadRequest = BXYouTubeNetworkHelpers.videoUploadRequest(for: item, ofSize: fileSize, location: uploadURL, accessToken: accessToken)
             let uploadTask = self.backgroundSession.uploadTask(with: uploadRequest, fromFile: item.url)
@@ -351,7 +439,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			else
 			{
                 self._resetState()
-                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.uploadFailed(reason:"Too many retries!")) }
+                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.apiError(reason:"Too many retries!")) }
 			}
 		}
 		

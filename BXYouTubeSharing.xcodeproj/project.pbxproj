@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4803226722734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803226622734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift */; };
+		4859564922789F7800F992EF /* BXKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859564822789F7800F992EF /* BXKeychain.swift */; };
+		489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */; };
 		48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */; };
 		48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */; };
+		48B96C8D2265972C00E89EF6 /* movie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 48B96C8C2265972C00E89EF6 /* movie.mov */; };
 		D05AB190225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB18F225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift */; };
 		D05AB192225F48F300205C7F /* BXYouTubeSharingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB191225F48F300205C7F /* BXYouTubeSharingViewController.swift */; };
 		D05AB195225F48F300205C7F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05AB193225F48F300205C7F /* Main.storyboard */; };
@@ -84,8 +88,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4803226622734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXAccountsOAuthQueryBuilder.swift; sourceTree = "<group>"; };
+		4859564822789F7800F992EF /* BXKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXKeychain.swift; sourceTree = "<group>"; };
+		489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+backgroundQueue.swift"; sourceTree = "<group>"; };
 		48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeNetworkHelpers.swift; sourceTree = "<group>"; };
 		48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+fileSize.swift"; sourceTree = "<group>"; };
+		48B96C8C2265972C00E89EF6 /* movie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = movie.mov; path = ../../../Desktop/movie.mov; sourceTree = "<group>"; };
 		D05AB18D225F48F300205C7F /* BXYouTubeSharing-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BXYouTubeSharing-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05AB18F225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharingAppDelegate.swift; sourceTree = "<group>"; };
 		D05AB191225F48F300205C7F /* BXYouTubeSharingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharingViewController.swift; sourceTree = "<group>"; };
@@ -155,6 +163,9 @@
 				48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */,
 				D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */,
 				48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */,
+				489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */,
+				4803226622734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift */,
+				4859564822789F7800F992EF /* BXKeychain.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -189,6 +200,7 @@
 				D05AB19B225F48F400205C7F /* Info.plist */,
 				D05AB18F225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift */,
 				D05AB191225F48F300205C7F /* BXYouTubeSharingViewController.swift */,
+				48B96C8C2265972C00E89EF6 /* movie.mov */,
 				D05AB193225F48F300205C7F /* Main.storyboard */,
 				D05AB198225F48F400205C7F /* LaunchScreen.storyboard */,
 				D05AB196225F48F400205C7F /* Assets.xcassets */,
@@ -330,6 +342,9 @@
 			isa = PBXProject;
 			attributes = {
 				DefaultBuildSystemTypeForWorkspace = Original;
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Boinx Software Ltd. & Imagine GbR";
@@ -377,6 +392,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48B96C8D2265972C00E89EF6 /* movie.mov in Resources */,
 				D05AB19A225F48F400205C7F /* LaunchScreen.storyboard in Resources */,
 				D05AB197225F48F400205C7F /* Assets.xcassets in Resources */,
 				D05AB195225F48F300205C7F /* Main.storyboard in Resources */,
@@ -422,10 +438,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */,
+				4859564922789F7800F992EF /* BXKeychain.swift in Sources */,
 				48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */,
 				D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */,
 				D05AB1C9225F837C00205C7F /* BXYouTubeUploadController.swift in Sources */,
 				D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */,
+				4803226722734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift in Sources */,
+				489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

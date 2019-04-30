@@ -8,29 +8,53 @@
 
 import Foundation
 
+#if os(macOS)
+import AppKit
+#elseif os(iOS)
+import UIKit
+#else
+#error("Unsupported platform")
+#endif
 
 //----------------------------------------------------------------------------------------------------------------------
 
+
+public protocol BXYouTubeAuthenticationControllerDelegate: BXMainThreadDelegate
+{
+    func youTubeAuthenticationControllerWillLogIn(_ authenticationController: BXYouTubeAuthenticationController) -> Void
+    func youTubeAuthenticationControllerDidLogIn(_ authenticationController: BXYouTubeAuthenticationController, error: BXYouTubeAuthenticationController.Error?) -> Void
+}
 
 public class BXYouTubeAuthenticationController
 {
 	/// Creates a new instance of this controller with the specified clientID/clientSecret uniquely identifying
 	/// the host application.
 	
-	public init(clientID: String, clientSecret: String)
+	public init(clientID: String, clientSecret: String, redirectURI: String)
 	{
 		self.clientID = clientID
 		self.clientSecret = clientSecret
+        self.redirectURI = redirectURI
+  
+        // TODO: Read refresh token from keychain under keychainIdentifier
 	}
+ 
+    public weak var delegate: BXYouTubeAuthenticationControllerDelegate? = nil
 	
 	private let clientID: String
 	private let clientSecret: String
+    private let redirectURI: String
+    
+    private static let scope: Set<String> = [
+        "https://www.googleapis.com/auth/youtube.readonly",
+        "https://www.googleapis.com/auth/youtube.upload"
+    ]
 
 
 	/// Convenience singleton instance of this controller. It is not instantiated automatically, because
 	/// its init() needs the clientID and clientSecret arguments, thich are unique to the host app.
 	
-//	public static let shared: BXYouTubeAuthenticationController
+	public static var shared: BXYouTubeAuthenticationController? = nil
 	
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -40,13 +64,161 @@ public class BXYouTubeAuthenticationController
 	
 	public private(set) var user: String? = nil
 	
-	/// The password of the logged in user
-	
-	public private(set) var password: String? = nil
-	
-	/// The currently valid access token for the user/password
-	
-	public private(set) var accessToken: String? = nil
+ 
+    private var keychainIdentifier: String
+    {
+        return "\(Bundle.main.bundleIdentifier ?? "untitledApp").BXYouTubeSharing.\(self.clientID)"
+    }
+
+    /// Save to keychain
+    private var refreshToken: String? = nil
+    {
+        didSet
+        {
+            // TODO: Save new value to keychain under keychainIdentifier
+        }
+    }
+    
+    private struct AccessToken: Codable
+    {
+        let value: String
+        let expirationDate: Date
+        
+        var isExpired: Bool
+        {
+            return Date() >= self.expirationDate.addingTimeInterval(-5 * 60)
+        }
+    }
+    
+    /// The currently valid access token for the user/password
+    private var accessToken: AccessToken?
+    {
+        get
+        {
+            if let data = BXKeychain.data(forKey: self.keychainIdentifier),
+               let accessToken = try? JSONDecoder().decode(AccessToken.self, from: data)
+            {
+                return accessToken
+            }
+            
+            return nil
+        }
+        set
+        {
+            let data = try! JSONEncoder().encode(self.accessToken)
+            BXKeychain.set(data, forKey: self.keychainIdentifier)
+        }
+    }
+    
+    @discardableResult
+    public func login() -> Bool
+    {
+        guard let url = self.authenticationURL else
+        {
+            print("Fail")
+            return false
+        }
+        
+        self.delegate?.onMainThread { $0.youTubeAuthenticationControllerWillLogIn(self) }
+        
+        #if os(macOS)
+        return NSWorkspace.shared.open(url)
+        #elseif os(iOS)
+        UIApplication.shared.open(url, options: [:])
+        return true
+        #endif
+    }
+    
+    public func handleOAuthResponse(returnURL: URL) -> Bool
+    {
+        if let urlComponents = URLComponents(url: returnURL, resolvingAgainstBaseURL: false),
+           returnURL.pathComponents.last == "BXYouTubeSharing"
+        {
+            // complete authentication
+            
+            if let scope = urlComponents.queryItems?.first(where: { $0.name == "scope" })?.value
+            {
+                // Validate scope only if present.
+                let scopeSet = Set(scope.components(separatedBy: " "))
+                
+                if BXYouTubeAuthenticationController.scope != scopeSet
+                {
+                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.authenticationFailed(reason: "insufficient permission")) }
+                    return true
+                }
+            }
+            
+            if let error = urlComponents.queryItems?.first(where: { $0.name == "error" })?.value
+            {
+                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.authenticationFailed(reason: error)) }
+                return true
+            }
+            
+            guard let code = urlComponents.queryItems?.first(where: { $0.name == "code" })?.value else
+            {
+                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.authenticationFailed(reason: "invalid response")) }
+                return true
+            }
+            
+            var authorizationURLComponents = URLComponents(string: "https://www.googleapis.com/oauth2/v4/token")!
+            //authorizationURLComponents.queryItems = BXAccountsOAuthQueryBuilder.accessTokenQueryItems(clientID: self.clientID, clientSecret: self.clientSecret, redirectURI: self.redirectURI, authCode: code)
+            let url = authorizationURLComponents.url!
+            
+            var request = URLRequest(url: url)
+            request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            request.httpMethod = "POST"
+            
+            let bodyObject: [String : Any] = [
+                "grant_type": "authorization_code",
+                "client_id": self.clientID,
+                "code": code,
+                "redirect_uri": self.redirectURI
+            ]
+            request.httpBody = try! JSONSerialization.data(withJSONObject: bodyObject, options: [])
+            
+            let task = self.foregroundSession.dataTask(with: request)
+            {
+                (data, _, error) in
+                
+                if let error = error
+                {
+                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.other(underlyingError: error)) }
+                    return
+                }
+                else if let data = data,
+                        let payload = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
+                {
+                    if let accessTokenValue = payload["access_token"] as? String,
+                       let refreshToken = payload["refresh_token"] as? String,
+                       let expiresInSeconds = payload["expires_in"] as? Int
+                    {
+                        // Valid Data
+                        self.refreshToken = refreshToken
+                        self.accessToken = AccessToken(value: accessTokenValue, expirationDate: Date(timeIntervalSinceNow: TimeInterval(expiresInSeconds)))
+                        
+                        self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: nil) }
+                        return
+                    }
+                    else if let errorDescription = payload["error_description"] as? String
+                    {
+                        // YouTube API Error
+                        self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.authenticationFailed(reason: errorDescription)) }
+                        return
+                    }
+                }
+                
+                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.authenticationFailed(reason: "invalid response")) }
+                return
+            }
+            task.resume()
+            
+            // Open app request was handled by this framework.
+            return true
+        }
+        
+        // Host app needs to handle request.
+        return false
+    }
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -56,8 +228,10 @@ public class BXYouTubeAuthenticationController
 	
 	public enum Error : Swift.Error
 	{
-        case networkError
-		case invalidCredentials
+		case unknownClient
+        case notLoggedIn
+        case authenticationFailed(reason: String)
+        case other(underlyingError: Swift.Error?)
 	}
 	
 	
@@ -65,36 +239,79 @@ public class BXYouTubeAuthenticationController
 
 
 	// MARK: -
+ 
+    private var refreshTokenRequestIsInFlight = false
+    private var completionHandlers: [(String?,Error?)->Void] = []
+    
+    private lazy var foregroundSession: URLSession =
+    {
+        return URLSession(configuration: .default, delegate: nil, delegateQueue: self.queue)
+    }()
+    
+    private lazy var queue: OperationQueue =
+    {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
 
-	
-	/// Requests a new accessToken for the specified user/password
-	
-	public func requestAccessToken(user: String, password: String, completionHandler: @escaping (String?,Error?)->Void)
+    public var authenticationURL: URL?
+    {
+        var urlComponents = URLComponents(string: "https://accounts.google.com/o/oauth2/v2/auth")!
+        
+        urlComponents.queryItems = BXAccountsOAuthQueryBuilder.authenticationQueryItems(clientID: self.clientID, redirectURI: self.redirectURI, scope: BXYouTubeAuthenticationController.scope.joined(separator: " "))
+        
+        return urlComponents.url
+    }
+    
+	public func requestAccessToken(completionHandler: @escaping (String?,Error?)->Void)
 	{
-		DispatchQueue.main.async
-		{
-			self.user = user
-			self.password = password
-			self.accessToken = "bla"
-		
-			completionHandler(self.accessToken,nil)
-		}
-	}
-	
-	
-	/// Renews the current accessToken to if its remaining lifetime is below the specific mimimum duration (in seconds)
-	
-	public func renewAccessToken(withLifetimeLessThan minLifetime: Double, completionHandler: @escaping (String?,Error?)->Void) throws
-	{
-		guard let user = self.user else { throw Error.invalidCredentials }
-		guard let password = self.password else { throw Error.invalidCredentials }
-		
-		let remainingLifetime = 60.0
-		
-		if remainingLifetime < minLifetime
-		{
-			self.requestAccessToken(user:user, password:password, completionHandler:completionHandler)
-		}
+        self.queue.addOperation
+        {
+            if let storedAccessToken = self.accessToken, !storedAccessToken.isExpired
+            {
+                completionHandler(storedAccessToken.value, nil)
+                
+                return
+            }
+            
+            print("RENEW ACCESS TOKEN NOW!!!")
+            return
+        
+            self.completionHandlers.append(completionHandler)
+            
+            // Renew access token
+            if self.refreshTokenRequestIsInFlight
+            {
+                return
+            }
+            else
+            {
+                self.refreshTokenRequestIsInFlight = true
+
+                DispatchQueue.background.async
+                {
+//                    let refreshRequest = BXYouTubeNetworkHelpers.tokenRefreshRequest()
+//                    self.foregroundSession.dataTask(with: refreshRequest)
+//                    { (data, response, error) in
+//                        // on: self.queue
+//
+//                        let accessToken: AccessToken? = AccessToken(value: "bla", creationTime: Date())
+//
+//                        self.accessToken = accessToken
+//
+//                        self.refreshTokenRequestIsInFlight = false
+//
+//                        let handlers = self.completionHandlers
+//                        self.completionHandlers = []
+//                        DispatchQueue.main.async
+//                        {
+//                            handlers.forEach { $0(accessToken?.value, error) }
+//                        }
+//                    }
+                }
+            }
+        }
 	}
 
 }

@@ -7,7 +7,7 @@
 
 
 import UIKit
-
+import BXYouTubeSharing
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -23,6 +23,14 @@ class BXYouTubeSharingAppDelegate: UIResponder, UIApplicationDelegate
 	{
 		return true
 	}
+ 
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool
+    {
+
+        BXYouTubeAuthenticationController.shared = BXYouTubeAuthenticationController(clientID: clientID, clientSecret: "", redirectURI: redirectURI)
+        
+        return true
+    }
 
 	func applicationWillResignActive(_ application: UIApplication)
 	{
@@ -48,7 +56,18 @@ class BXYouTubeSharingAppDelegate: UIResponder, UIApplicationDelegate
 	{
 
 	}
-
+ 
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool
+    {
+        if BXYouTubeAuthenticationController.shared?.handleOAuthResponse(returnURL: url) ?? false
+        {
+            return true
+        }
+        
+        // Perform own URL handlers
+        
+        return false
+    }
 }
 
 

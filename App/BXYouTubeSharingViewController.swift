@@ -27,10 +27,11 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 	@IBOutlet weak var privacyPicker:UIPickerView!
 	@IBOutlet weak var shareButton:UIButton!
 	@IBOutlet weak var progressView:UIProgressView!
-
+    @IBOutlet weak var openInYouTubeButton: UIButton!
+    
 	/// The URL of the selected file
 	
-	var url:URL? = nil
+	var fileURL:URL? = nil
 
 	/// The list of YouTube categories
 	
@@ -43,6 +44,7 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 	
 	var privacyStatuses:[BXYouTubeUploadController.Item.PrivacyStatus] = BXYouTubeUploadController.Item.PrivacyStatus.allCases
 	
+    var webURL: URL? = nil
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -53,7 +55,16 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 		
 		self.progressView.progress = 0.0
 		
-		BXYouTubeUploadController.shared.categories(for: "fr", completionHandler: { (categories, error) in
+		self.loadCategories()
+        self.updateOpenInYouTubeButton()
+  
+        self.fileURL = Bundle.main.url(forResource: "movie", withExtension: "mov")
+        self.shareButton.isEnabled = true
+	}
+ 
+    private func loadCategories()
+    {
+        BXYouTubeUploadController.shared.categories(for: "fr", completionHandler: { (categories, error) in
             if let error = error
             {
                 print("error fetching categories \(error)")
@@ -63,10 +74,7 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
                 self.categories = categories
             }
         })
-  
-        self.url = Bundle.main.url(forResource: "movie", withExtension: "mov")
-        self.shareButton.isEnabled = true
-	}
+    }
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -86,21 +94,26 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 	
    	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL])
     {
-		self.url = urls.first
+		self.fileURL = urls.first
 		self.didPickFile()
     }
 
 	func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController)
 	{
-		self.url = nil
+		self.fileURL = nil
 		self.didPickFile()
 	}
 
 	func didPickFile()
 	{
-		self.urlField.text = url?.path ?? "None Selected"
-		self.shareButton.isEnabled = url != nil
+		self.urlField.text = fileURL?.path ?? "None Selected"
+		self.shareButton.isEnabled = fileURL != nil
 	}
+ 
+    private func updateOpenInYouTubeButton()
+    {
+        self.openInYouTubeButton.isEnabled = (self.webURL != nil)
+    }
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -151,11 +164,24 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
         controller.login()
     }
     
-	/// Shares the selected file
+    @IBAction func reset(_ sender: Any)
+    {
+        BXYouTubeAuthenticationController.shared!.reset()
+    }
+    
+    @IBAction func openInYouTube(_ sender: Any)
+    {
+        if let url = self.webURL
+        {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+    
+    /// Shares the selected file
 	
 	@IBAction func share(_ sender:Any!)
 	{
-		guard let url = url else { return }
+		guard let url = fileURL else { return }
 		let title = titleField.text ?? ""
 		let description = descriptionField.text ?? ""
 		let tags = (tagsField.text ?? "").components(separatedBy:",").map { $0.trimmingCharacters(in:CharacterSet.whitespaces) }
@@ -165,19 +191,30 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 		let categoryID = self.categories[categoryIndex].identifier
 
 		let controller = BXYouTubeUploadController.shared
-//		controller.accessToken = "•••••••••••••••••••••••••••"
-        controller.accessToken = "1234ya29.Glz0BqvrCbdJJLqjTlb8xwbQBwXi7FtjE1HTmI3HOx4I6u8H-LB0rpHAzEmnXrocD7W-ILPvVng05SXF3zgStZLMp2-IK1SBtSUAvDfqFT_If11NenI_ilzxeFaP_w"
 		controller.delegate = self
 
 		let item = BXYouTubeUploadController.Item(
-			url:url,
+			fileURL:url,
 			title:title,
 			description:description,
 			categoryID:categoryID,
 			tags:tags,
 			privacyStatus:privacyStatus)
+   
+        print("User clicked share button, request access token.")
 		
-		try! controller.upload(item)
+        BXYouTubeAuthenticationController.shared!.requestAccessToken
+        {
+            (accessToken, error) in
+            
+            assert(error == nil, "\(error!)")
+            
+            print("Got access token, start upload")
+            
+            controller.accessToken = accessToken
+            try! controller.upload(item)
+        }
+		
 	}
  
     private var loginAlert: UIAlertController?
@@ -215,6 +252,8 @@ extension BXYouTubeSharingViewController: BXYouTubeAuthenticationControllerDeleg
     
     func youTubeAuthenticationControllerDidLogIn(_ authenticationController: BXYouTubeAuthenticationController, error: BXYouTubeAuthenticationController.Error?)
     {
+        self.loadCategories()
+        
         self.loginAlert?.dismiss(animated: true, completion: {
             self.loginAlert = nil
             
@@ -239,9 +278,15 @@ extension BXYouTubeSharingViewController: BXYouTubeSharingDelegate
         self.progressView.observedProgress = progress
     }
 	
-	func didFinishUpload(error:Error?)
+	func didFinishUpload(url: URL?, error:Error?)
 	{
         self.progressView.observedProgress = nil
+        
+        print("Did finish upload, url: \(url?.absoluteString ?? "(none)")")
+        
+        self.webURL = url
+        
+        self.updateOpenInYouTubeButton()
         
 		if let error = error
 		{

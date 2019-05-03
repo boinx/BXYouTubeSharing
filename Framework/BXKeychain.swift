@@ -28,13 +28,33 @@ struct BXKeychain
     
     static func set(_ data: Data, forKey identifier: String)
     {
+        let updateQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
+                                          kSecAttrLabel as String: identifier]
+        
+        var status = SecItemUpdate(updateQuery as CFDictionary, [kSecValueData as String: data as CFData] as CFDictionary)
+        var actionPerformed = "Updated"
+        
+        if status == errSecItemNotFound
+        {
+            let addQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
+                                           kSecAttrLabel as String: identifier,
+                                           kSecValueData as String: data as CFData]
+            
+            status = SecItemAdd(addQuery as CFDictionary, nil)
+            actionPerformed = "Added"
+        }
+        
+        print("\(actionPerformed) keychain data for identifier \(identifier) with result: \(self.stringForStatus(status))")
+    }
+    
+    static func deleteData(forKey identifier: String)
+    {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    kSecAttrLabel as String: identifier,
-                                    kSecValueData as String: data as CFData]
+                                    kSecAttrLabel as String: identifier]
         
-        let status = SecItemAdd(query as CFDictionary, nil)
+        let status = SecItemDelete(query as CFDictionary)
         
-        print("Wrote keychain data for identifier \(identifier) with result: \(self.stringForStatus(status))")
+        print("Deleted keychain data for identifier \(identifier) with result: \(self.stringForStatus(status))")
     }
     
     static private func stringForStatus(_ status: OSStatus) -> String

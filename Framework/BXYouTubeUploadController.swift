@@ -39,7 +39,7 @@ public class BXYouTubeUploadController: NSObject
 	{
 		/// File to upload
 		
-		public var url:URL
+		public var fileURL:URL
 		
 		/// The video title
 		
@@ -75,12 +75,16 @@ public class BXYouTubeUploadController: NSObject
 		/// Specifies whether YouTube applies motion stabilization to the video
 		
 		public var stabilize:Bool = false
+  
+  
+        fileprivate var uploadReponseData: Data = Data()
+        fileprivate var webURL: URL? = nil
 		
 		/// Creates an Item struct
 		
-		public init(url:URL, title:String = "", description:String = "", categoryID:String = "", tags:[String] = [], privacyStatus:PrivacyStatus = .private, autoLevels:Bool = false, stabilize:Bool = false)
+		public init(fileURL:URL, title:String = "", description:String = "", categoryID:String = "", tags:[String] = [], privacyStatus:PrivacyStatus = .private, autoLevels:Bool = false, stabilize:Bool = false)
 		{
-			self.url = url
+			self.fileURL = fileURL
 			self.title = title
 			self.description = description
 			self.categoryID = categoryID
@@ -279,7 +283,7 @@ public class BXYouTubeUploadController: NSObject
         {
             throw Error.invalidAccessToken
         }
-		guard let fileSize = item.url.fileSize else
+		guard let fileSize = item.fileURL.fileSize else
         {
             throw Error.fileAccessError
         }
@@ -303,7 +307,7 @@ public class BXYouTubeUploadController: NSObject
             if let error = error
             {
                 self._resetState()
-                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.other(underlyingError: error)) }
+                self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: error)) }
             }
             else if let httpResponse = response as? HTTPURLResponse
             {
@@ -322,13 +326,13 @@ public class BXYouTubeUploadController: NSObject
                         let errorMessage = errorObj["message"] as? String
                 {
                     self._resetState()
-                    self.delegate?.onMainThread { $0.didFinishUpload(error: Error.apiError(reason: errorMessage)) }
+                    self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.apiError(reason: errorMessage)) }
                 }
             }
             else
             {
                 self._resetState()
-                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.other(underlyingError: nil)) }
+                self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: nil)) }
             }
         }
         
@@ -349,7 +353,7 @@ public class BXYouTubeUploadController: NSObject
             self.uploadTask?.cancel()
 
             self._resetState()
-            self.delegate?.onMainThread { $0.didFinishUpload(error: Error.userCanceled) }
+            self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.userCanceled) }
         }
     }
 	
@@ -364,14 +368,14 @@ public class BXYouTubeUploadController: NSObject
  
 		guard let accessToken = self.accessToken else { return }
 		guard let item = self.uploadItem else { return }
-		guard let fileSize = item.url.fileSize else { return }
+		guard let fileSize = item.fileURL.fileSize else { return }
 		guard let uploadURL = self.uploadURL else { return }
 
         // Upload task may not be created on self.queue (which has a concurrency of 1 and therefore blocks).
         DispatchQueue.background.async
         {
             let uploadRequest = BXYouTubeNetworkHelpers.videoUploadRequest(for: item, ofSize: fileSize, location: uploadURL, accessToken: accessToken)
-            let uploadTask = self.backgroundSession.uploadTask(with: uploadRequest, fromFile: item.url)
+            let uploadTask = self.backgroundSession.uploadTask(with: uploadRequest, fromFile: item.fileURL)
             uploadTask.resume()
             
             self.queue.addOperation
@@ -439,7 +443,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			else
 			{
                 self._resetState()
-                self.delegate?.onMainThread { $0.didFinishUpload(error: Error.apiError(reason:"Too many retries!")) }
+                self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.apiError(reason:"Too many retries!")) }
 			}
 		}
 		
@@ -447,10 +451,26 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 		
 		else
 		{
+            var url: URL? = nil
+            if let data = self.uploadItem?.uploadReponseData,
+               let jsonResponse = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any],
+               let videoId = jsonResponse["id"] as? String
+            {
+                url = URL(string: "https://www.youtube.com/watch?v=\(videoId)")
+            }
+            
             self._resetState()
-            self.delegate?.onMainThread { $0.didFinishUpload(error: nil) }
+            self.delegate?.onMainThread { $0.didFinishUpload(url: url, error: nil) }
 		}
 		
+    }
+}
+
+extension BXYouTubeUploadController: URLSessionDataDelegate
+{
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data)
+    {
+        self.uploadItem?.uploadReponseData.append(data)
     }
 }
 
@@ -474,7 +494,7 @@ public protocol BXYouTubeSharingDelegate : BXMainThreadDelegate
 	func willStartUpload()			// Called immediately, can be used to disable UI
 	func didStartUpload()			// Called asynchronously once communication with YouTube is established
 	func didContinueUpload(progress: Progress)
-	func didFinishUpload(error: Error?)
+	func didFinishUpload(url: URL?, error: Error?)
 }
 
 public extension BXYouTubeSharingDelegate
@@ -482,7 +502,7 @@ public extension BXYouTubeSharingDelegate
 	func willStartUpload() {}
 	func didStartUpload() {}
 	func didContinueUpload(progress: Progress) {}
-	func didFinishUpload(error: Error?) {}
+	func didFinishUpload(url: URL?, error: Error?) {}
 }
 
 

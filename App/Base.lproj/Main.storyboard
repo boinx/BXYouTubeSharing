@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="5tT-qy-gsz">
-                                        <rect key="frame" x="20" y="0.0" width="794" height="1067"/>
+                                        <rect key="frame" x="20" y="0.0" width="794" height="1121"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uCH-Va-HZv">
                                                 <rect key="frame" x="0.0" y="0.0" width="794" height="14.5"/>
@@ -40,8 +40,17 @@
                                                             <action selector="login:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oPL-7p-Car"/>
                                                         </connections>
                                                     </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OzZ-Rh-gmW">
+                                                        <rect key="frame" x="755" y="10" width="39" height="30"/>
+                                                        <state key="normal" title="Reset"/>
+                                                        <connections>
+                                                            <action selector="reset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6qp-aY-7uQ"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
+                                                    <constraint firstItem="OzZ-Rh-gmW" firstAttribute="centerY" secondItem="PCo-14-exm" secondAttribute="centerY" id="860-NB-9gz"/>
+                                                    <constraint firstAttribute="trailing" secondItem="OzZ-Rh-gmW" secondAttribute="trailing" id="Heo-5B-XLU"/>
                                                     <constraint firstItem="7Ox-W6-RVB" firstAttribute="centerY" secondItem="PCo-14-exm" secondAttribute="centerY" id="Sj9-OV-hdV"/>
                                                     <constraint firstItem="7Ox-W6-RVB" firstAttribute="centerX" secondItem="PCo-14-exm" secondAttribute="centerX" id="V2k-5R-qb4"/>
                                                     <constraint firstAttribute="height" constant="50" id="kgj-4O-aYG"/>
@@ -139,8 +148,17 @@
                                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="qNA-yb-dcG">
                                                 <rect key="frame" x="0.0" y="1045" width="794" height="2"/>
                                             </progressView>
+                                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EGI-LJ-zdc">
+                                                <rect key="frame" x="0.0" y="1062" width="794" height="39"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                                <state key="normal" title="Open in YouTube"/>
+                                                <connections>
+                                                    <action selector="openInYouTube:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qxH-QI-u1V"/>
+                                                    <action selector="share:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0iN-pn-PMh"/>
+                                                </connections>
+                                            </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d4f-g0-BUR">
-                                                <rect key="frame" x="0.0" y="1062" width="794" height="5"/>
+                                                <rect key="frame" x="0.0" y="1116" width="794" height="5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="5" id="rGX-gT-1SA"/>
                                                 </constraints>
@@ -170,6 +188,7 @@
                     <connections>
                         <outlet property="categoryPicker" destination="Cu3-Yw-GNw" id="6xf-gn-H2N"/>
                         <outlet property="descriptionField" destination="2RJ-ja-fSH" id="ePV-sY-gDM"/>
+                        <outlet property="openInYouTubeButton" destination="EGI-LJ-zdc" id="5ec-Dm-Kph"/>
                         <outlet property="privacyPicker" destination="Dp3-fm-fjL" id="ln9-Tc-k30"/>
                         <outlet property="progressView" destination="qNA-yb-dcG" id="Ac4-3Q-5vb"/>
                         <outlet property="selectFileButton" destination="Vca-Q3-e8Q" id="68r-ZA-ggk"/>

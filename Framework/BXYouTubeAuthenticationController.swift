@@ -36,7 +36,8 @@ public class BXYouTubeAuthenticationController
 		self.clientSecret = clientSecret
         self.redirectURI = redirectURI
   
-        // TODO: Read refresh token from keychain under keychainIdentifier
+        self.refreshToken = self.loadRefreshToken()
+        self.accessToken = self.loadAccessToken()
 	}
  
     public weak var delegate: BXYouTubeAuthenticationControllerDelegate? = nil
@@ -65,9 +66,15 @@ public class BXYouTubeAuthenticationController
 	public private(set) var user: String? = nil
 	
  
-    private var keychainIdentifier: String
+    private enum KeychainPurpose: String
     {
-        return "\(Bundle.main.bundleIdentifier ?? "untitledApp").BXYouTubeSharing.\(self.clientID)"
+        case refreshToken
+        case accessToken
+    }
+    
+    private func keychainIdentifier(for purpose: KeychainPurpose) -> String
+    {
+        return "\(Bundle.main.bundleIdentifier ?? "untitledApp").BXYouTubeSharing.\(self.clientID).\(purpose.rawValue)".replacingOccurrences(of: ".", with: "_")
     }
 
     /// Save to keychain
@@ -75,8 +82,34 @@ public class BXYouTubeAuthenticationController
     {
         didSet
         {
-            // TODO: Save new value to keychain under keychainIdentifier
+            let identifier = self.keychainIdentifier(for: .refreshToken)
+            if let refreshToken = self.refreshToken
+            {
+                if let data = refreshToken.data(using: .utf8)
+                {
+                    //BXKeychain.set(data, forKey: identifier)
+                    UserDefaults.standard.set(data, forKey: identifier)
+                }
+            }
+            else
+            {
+                //BXKeychain.deleteData(forKey: identifier)
+                UserDefaults.standard.removeObject(forKey: identifier)
+            }
         }
+    }
+    
+    private func loadRefreshToken() -> String?
+    {
+        let identifier = self.keychainIdentifier(for: .refreshToken)
+        if //let data = BXKeychain.data(forKey: identifier),
+           let data = UserDefaults.standard.data(forKey: identifier),
+           let refreshToken = String(data: data, encoding: .utf8)
+        {
+            return refreshToken
+        }
+
+        return nil
     }
     
     private struct AccessToken: Codable
@@ -90,24 +123,49 @@ public class BXYouTubeAuthenticationController
         }
     }
     
-    /// The currently valid access token for the user/password
-    private var accessToken: AccessToken?
+    /// The currently valid access token for the user
+    private var accessToken: AccessToken? = nil
     {
-        get
+        didSet
         {
-            if let data = BXKeychain.data(forKey: self.keychainIdentifier),
-               let accessToken = try? JSONDecoder().decode(AccessToken.self, from: data)
+            let identifier = self.keychainIdentifier(for: .accessToken)
+            if let accessToken = self.accessToken
             {
-                return accessToken
+                if let data = try? JSONEncoder().encode(accessToken)
+                {
+                    //BXKeychain.set(data, forKey: identifier)
+                    UserDefaults.standard.set(data, forKey: identifier)
+                }
+                else
+                {
+                    assertionFailure("Unable to encode access token \(accessToken)")
+                }
             }
-            
-            return nil
+            else
+            {
+                //BXKeychain.deleteData(forKey: identifier)
+                UserDefaults.standard.removeObject(forKey: identifier)
+            }
         }
-        set
+    }
+    
+    private func loadAccessToken() -> AccessToken?
+    {
+        let identifier = self.keychainIdentifier(for: .accessToken)
+        if //let data = BXKeychain.data(forKey: identifier),
+           let data = UserDefaults.standard.data(forKey: identifier),
+           let accessToken = try? JSONDecoder().decode(AccessToken.self, from: data)
         {
-            let data = try! JSONEncoder().encode(self.accessToken)
-            BXKeychain.set(data, forKey: self.keychainIdentifier)
+            return accessToken
         }
+
+        return nil
+    }
+    
+    public func reset()
+    {
+        self.accessToken = nil
+        self.refreshToken = nil
     }
     
     @discardableResult
@@ -270,7 +328,10 @@ public class BXYouTubeAuthenticationController
         {
             if let storedAccessToken = self.accessToken, !storedAccessToken.isExpired
             {
-                completionHandler(storedAccessToken.value, nil)
+                DispatchQueue.main.async
+                {
+                    completionHandler(storedAccessToken.value, nil)
+                }
                 
                 return
             }

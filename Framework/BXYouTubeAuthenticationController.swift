@@ -336,52 +336,64 @@ public class BXYouTubeAuthenticationController
 	{
         self.queue.addOperation
         {
-            if let storedAccessToken = self.accessToken, !storedAccessToken.isExpired
+            if let storedAccessToken = self.accessToken
+            {
+            	if !storedAccessToken.isExpired
+            	{
+					DispatchQueue.main.async
+					{
+						completionHandler(storedAccessToken.value, nil)
+					}
+                }
+                else
+                {
+                	#warning("TODO: Renew accessToken")
+            		print("RENEW ACCESS TOKEN NOW!!!")
+                }
+             }
+            else
             {
                 DispatchQueue.main.async
                 {
-                    completionHandler(storedAccessToken.value, nil)
-                }
-                
-                return
-            }
-            
-            print("RENEW ACCESS TOKEN NOW!!!")
-            return
-        
-            self.completionHandlers.append(completionHandler)
-            
-            // Renew access token
-            if self.refreshTokenRequestIsInFlight
-            {
-                return
-            }
-            else
-            {
-                self.refreshTokenRequestIsInFlight = true
-
-                DispatchQueue.background.async
-                {
-//                    let refreshRequest = BXYouTubeNetworkHelpers.tokenRefreshRequest()
-//                    self.foregroundSession.dataTask(with: refreshRequest)
-//                    { (data, response, error) in
-//                        // on: self.queue
-//
-//                        let accessToken: AccessToken? = AccessToken(value: "bla", creationTime: Date())
-//
-//                        self.accessToken = accessToken
-//
-//                        self.refreshTokenRequestIsInFlight = false
-//
-//                        let handlers = self.completionHandlers
-//                        self.completionHandlers = []
-//                        DispatchQueue.main.async
-//                        {
-//                            handlers.forEach { $0(accessToken?.value, error) }
-//                        }
-//                    }
+                    completionHandler(nil, .notLoggedIn)
                 }
             }
+            
+//            return
+//
+//            self.completionHandlers.append(completionHandler)
+//
+//            // Renew access token
+//            if self.refreshTokenRequestIsInFlight
+//            {
+//                return
+//            }
+//            else
+//            {
+//                self.refreshTokenRequestIsInFlight = true
+//
+//                DispatchQueue.background.async
+//                {
+////                    let refreshRequest = BXYouTubeNetworkHelpers.tokenRefreshRequest()
+////                    self.foregroundSession.dataTask(with: refreshRequest)
+////                    { (data, response, error) in
+////                        // on: self.queue
+////
+////                        let accessToken: AccessToken? = AccessToken(value: "bla", creationTime: Date())
+////
+////                        self.accessToken = accessToken
+////
+////                        self.refreshTokenRequestIsInFlight = false
+////
+////                        let handlers = self.completionHandlers
+////                        self.completionHandlers = []
+////                        DispatchQueue.main.async
+////                        {
+////                            handlers.forEach { $0(accessToken?.value, error) }
+////                        }
+////                    }
+//                }
+//            }
         }
 	}
 

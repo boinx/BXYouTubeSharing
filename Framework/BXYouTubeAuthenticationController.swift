@@ -16,6 +16,7 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -24,6 +25,15 @@ public protocol BXYouTubeAuthenticationControllerDelegate: BXMainThreadDelegate
     func youTubeAuthenticationControllerWillLogIn(_ authenticationController: BXYouTubeAuthenticationController) -> Void
     func youTubeAuthenticationControllerDidLogIn(_ authenticationController: BXYouTubeAuthenticationController, error: BXYouTubeAuthenticationController.Error?) -> Void
 }
+
+public extension BXYouTubeAuthenticationControllerDelegate
+{
+	func youTubeAuthenticationControllerWillLogIn(_ authenticationController: BXYouTubeAuthenticationController) -> Void {}
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
 
 public class BXYouTubeAuthenticationController
 {

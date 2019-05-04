@@ -494,7 +494,7 @@ public protocol BXYouTubeSharingDelegate : BXMainThreadDelegate
 	func willStartUpload()			// Called immediately, can be used to disable UI
 	func didStartUpload()			// Called asynchronously once communication with YouTube is established
 	func didContinueUpload(progress: Progress)
-	func didFinishUpload(url: URL?, error: Error?)
+	func didFinishUpload(url: URL?, error: BXYouTubeUploadController.Error?)
 }
 
 public extension BXYouTubeSharingDelegate
@@ -502,7 +502,7 @@ public extension BXYouTubeSharingDelegate
 	func willStartUpload() {}
 	func didStartUpload() {}
 	func didContinueUpload(progress: Progress) {}
-	func didFinishUpload(url: URL?, error: Error?) {}
+	func didFinishUpload(url: URL?, error: BXYouTubeUploadController.Error?) {}
 }
 
 

@@ -228,7 +228,7 @@ public class BXYouTubeAuthenticationController
                 return true
             }
             
-            var authorizationURLComponents = URLComponents(string: "https://www.googleapis.com/oauth2/v4/token")!
+            let authorizationURLComponents = URLComponents(string: "https://www.googleapis.com/oauth2/v4/token")!
             //authorizationURLComponents.queryItems = BXAccountsOAuthQueryBuilder.accessTokenQueryItems(clientID: self.clientID, clientSecret: self.clientSecret, redirectURI: self.redirectURI, authCode: code)
             let url = authorizationURLComponents.url!
             

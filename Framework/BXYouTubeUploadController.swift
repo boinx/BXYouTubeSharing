@@ -64,6 +64,13 @@ public class BXYouTubeUploadController: NSObject
 			case `private`
 			case `public`
 			case unlisted
+			
+			#warning("TODO: return localized names")
+			
+			var localizedName : String
+			{
+				return self.rawValue
+			}
 		}
 		
 		public var privacyStatus:PrivacyStatus = .private

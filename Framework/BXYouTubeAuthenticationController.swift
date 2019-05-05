@@ -348,7 +348,10 @@ public class BXYouTubeAuthenticationController
                 else
                 {
                 	#warning("TODO: Renew accessToken")
+					
             		print("RENEW ACCESS TOKEN NOW!!!")
+            		self.accessToken = nil
+            		self.requestAccessToken(completionHandler: completionHandler)
                 }
              }
             else

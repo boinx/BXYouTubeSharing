@@ -161,7 +161,12 @@ public class BXYouTubeUploadController: NSObject
 	{
         guard let accessToken = self.accessToken else
         {
-            BXYouTubeAuthenticationController.shared?.requestAccessToken(completionHandler: { (accessToken, error) in
+            BXYouTubeAuthenticationController.shared?.requestAccessToken({ (accessToken, error) in
+                if error != nil
+                {
+                    completionHandler([], Error.other(underlyingError: error))
+                    return
+                }
                 self.accessToken = accessToken
                 self.categories(for: languageCode, maxRetries: maxRetries-1, completionHandler: completionHandler)
             })
@@ -182,7 +187,12 @@ public class BXYouTubeUploadController: NSObject
                     if (errorCode == 401 || errorCode == 403) && maxRetries > 0
                     {
                         // Retry
-                        BXYouTubeAuthenticationController.shared?.requestAccessToken(completionHandler: { (accessToken, error) in
+                        BXYouTubeAuthenticationController.shared?.requestAccessToken({ (accessToken, error) in
+                            if error != nil
+                            {
+                                completionHandler([], Error.other(underlyingError: error))
+                                return
+                            }
                             self.accessToken = accessToken
                             self.categories(for: languageCode, maxRetries: maxRetries-1, completionHandler: completionHandler)
                         })
@@ -192,7 +202,7 @@ public class BXYouTubeUploadController: NSObject
                     {
                         DispatchQueue.main.async
                         {
-                            completionHandler([], Error.apiError(reason: errorDescription))
+                            completionHandler([], Error.youTubeAPIError(reason: errorDescription))
                         }
                         return
                     }
@@ -212,7 +222,7 @@ public class BXYouTubeUploadController: NSObject
                 
                 DispatchQueue.main.async
                 {
-                    completionHandler([], Error.apiError(reason: "Invalid response"))
+                    completionHandler([], Error.youTubeAPIError(reason: "Invalid response"))
                 }
             }
         }
@@ -231,7 +241,7 @@ public class BXYouTubeUploadController: NSObject
         case fileAccessError
         case userCanceled
         case uploadAlreadyInProgress
-        case apiError(reason: String)
+        case youTubeAPIError(reason: String)
 		case other(underlyingError: Swift.Error?)
 	}
 	
@@ -333,7 +343,7 @@ public class BXYouTubeUploadController: NSObject
                         let errorMessage = errorObj["message"] as? String
                 {
                     self._resetState()
-                    self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.apiError(reason: errorMessage)) }
+                    self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.youTubeAPIError(reason: errorMessage)) }
                 }
             }
             else
@@ -450,7 +460,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			else
 			{
                 self._resetState()
-                self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.apiError(reason:"Too many retries!")) }
+                self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.youTubeAPIError(reason:"Too many retries!")) }
 			}
 		}
 		

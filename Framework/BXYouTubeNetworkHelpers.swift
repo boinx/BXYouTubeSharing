@@ -9,6 +9,22 @@
 import Foundation
 
 
+/// OAuth Request Parameters taken from https://tools.ietf.org/html/rfc6749
+internal struct OAuthParams
+{
+    static let responseType = "response_type"
+    static let clientID = "client_id"
+    static let clientSecret = "client_secret"
+    static let redirectURI = "redirect_uri"
+    static let scope = "scope"
+    static let state = "state"
+    static let grantType = "grant_type"
+    static let code = "code"
+    static let refreshToken = "refresh_token"
+    static let accessToken = "access_token"
+}
+
+
 internal class BXYouTubeNetworkHelpers
 {
     static let backgroundSessionIdentifier = "com.boinx.BXYouTubeSharing.backgroundSession"
@@ -28,6 +44,59 @@ internal class BXYouTubeNetworkHelpers
         // Set request headers for authentication and propper content types.
         request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        return request
+    }
+    
+    static func authenticationURL(clientID: String, redirectURI: String, scope: String) -> URL?
+    {
+        var urlComponents = URLComponents(string: "https://accounts.google.com/o/oauth2/v2/auth")!
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: OAuthParams.responseType, value: "code"),
+            URLQueryItem(name: OAuthParams.clientID, value: clientID),
+            URLQueryItem(name: OAuthParams.redirectURI, value: redirectURI),
+            URLQueryItem(name: OAuthParams.scope, value: scope)
+        ]
+        
+        return urlComponents.url
+    }
+    
+    static func accessTokenRequest(clientID: String, redirectURI: String, authCode: String) -> URLRequest
+    {
+        let url = URL(string: "https://www.googleapis.com/oauth2/v4/token")!
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = "POST"
+        
+        request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let bodyObject: [String: Any] = [
+            OAuthParams.grantType: "authorization_code",
+            OAuthParams.clientID: clientID,
+            OAuthParams.code: authCode,
+            OAuthParams.redirectURI: redirectURI
+        ]
+        request.httpBody = try! JSONSerialization.data(withJSONObject: bodyObject, options: [])
+        
+        return request
+    }
+    
+    static func refreshAccessTokenRequest(clientID: String, refreshToken: String) -> URLRequest
+    {
+        let url = URL(string: "https://www.googleapis.com/oauth2/v4/token")!
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = "POST"
+        
+        request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let bodyObject: [String: Any] = [
+            OAuthParams.grantType: "refresh_token",
+            OAuthParams.clientID: clientID,
+            OAuthParams.refreshToken: refreshToken
+        ]
+        request.httpBody = try! JSONSerialization.data(withJSONObject: bodyObject, options: [])
         
         return request
     }

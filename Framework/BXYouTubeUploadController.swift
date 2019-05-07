@@ -67,7 +67,7 @@ public class BXYouTubeUploadController: NSObject
 			
 			#warning("TODO: return localized names")
 			
-			var localizedName : String
+			public var localizedName : String
 			{
 				return self.rawValue
 			}

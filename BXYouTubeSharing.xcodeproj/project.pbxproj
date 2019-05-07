@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4803226722734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4803226622734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift */; };
 		4859564922789F7800F992EF /* BXKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859564822789F7800F992EF /* BXKeychain.swift */; };
 		489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */; };
 		48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */; };
@@ -88,7 +87,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4803226622734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXAccountsOAuthQueryBuilder.swift; sourceTree = "<group>"; };
 		4859564822789F7800F992EF /* BXKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXKeychain.swift; sourceTree = "<group>"; };
 		489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+backgroundQueue.swift"; sourceTree = "<group>"; };
 		48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeNetworkHelpers.swift; sourceTree = "<group>"; };
@@ -164,7 +162,6 @@
 				D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */,
 				48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */,
 				489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */,
-				4803226622734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift */,
 				4859564822789F7800F992EF /* BXKeychain.swift */,
 			);
 			name = Helpers;
@@ -443,7 +440,6 @@
 				D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */,
 				D05AB1C9225F837C00205C7F /* BXYouTubeUploadController.swift in Sources */,
 				D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */,
-				4803226722734DFE00C04D08 /* BXAccountsOAuthQueryBuilder.swift in Sources */,
 				489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

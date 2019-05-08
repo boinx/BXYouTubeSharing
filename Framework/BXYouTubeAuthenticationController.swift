@@ -98,14 +98,12 @@ public class BXYouTubeAuthenticationController
             {
                 if let data = refreshToken.data(using: .utf8)
                 {
-                    //BXKeychain.set(data, forKey: identifier)
-                    UserDefaults.standard.set(data, forKey: identifier)
+                    BXKeychain.set(data, forKey: identifier)
                 }
             }
             else
             {
-                //BXKeychain.deleteData(forKey: identifier)
-                UserDefaults.standard.removeObject(forKey: identifier)
+                BXKeychain.deleteData(forKey: identifier)
             }
         }
     }
@@ -113,8 +111,7 @@ public class BXYouTubeAuthenticationController
     private func loadRefreshToken() -> String?
     {
         let identifier = self.keychainIdentifier(for: .refreshToken)
-        if //let data = BXKeychain.data(forKey: identifier),
-           let data = UserDefaults.standard.data(forKey: identifier),
+        if let data = BXKeychain.data(forKey: identifier),
            let refreshToken = String(data: data, encoding: .utf8)
         {
             return refreshToken
@@ -144,8 +141,7 @@ public class BXYouTubeAuthenticationController
             {
                 if let data = try? JSONEncoder().encode(accessToken)
                 {
-                    //BXKeychain.set(data, forKey: identifier)
-                    UserDefaults.standard.set(data, forKey: identifier)
+                    BXKeychain.set(data, forKey: identifier)
                 }
                 else
                 {
@@ -154,8 +150,7 @@ public class BXYouTubeAuthenticationController
             }
             else
             {
-                //BXKeychain.deleteData(forKey: identifier)
-                UserDefaults.standard.removeObject(forKey: identifier)
+                BXKeychain.deleteData(forKey: identifier)
             }
         }
     }
@@ -163,8 +158,7 @@ public class BXYouTubeAuthenticationController
     private func loadAccessToken() -> AccessToken?
     {
         let identifier = self.keychainIdentifier(for: .accessToken)
-        if //let data = BXKeychain.data(forKey: identifier),
-           let data = UserDefaults.standard.data(forKey: identifier),
+        if let data = BXKeychain.data(forKey: identifier),
            let accessToken = try? JSONDecoder().decode(AccessToken.self, from: data)
         {
             return accessToken

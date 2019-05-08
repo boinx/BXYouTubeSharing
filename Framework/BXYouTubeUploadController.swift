@@ -176,9 +176,19 @@ public class BXYouTubeUploadController: NSObject
 		let request = BXYouTubeNetworkHelpers.categoriesRequest(languageCode: languageCode, accessToken: accessToken)
         
         let task = self.foregroundSession.dataTask(with: request)
-        { (data, response, error) in
-            if let data = data,
-               let payload = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
+        {
+            (data, _, error) in
+            
+            if let error = error
+            {
+                DispatchQueue.main.async
+                {
+                    completionHandler([], Error.other(underlyingError: error))
+                }
+                return
+            }
+            else if let data = data,
+                    let payload = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
             {
                 if let errorDict = payload["error"] as? [String: Any],
                    let errorCode = errorDict["code"] as? Int,
@@ -219,11 +229,11 @@ public class BXYouTubeUploadController: NSObject
                     }
                     return
                 }
-                
-                DispatchQueue.main.async
-                {
-                    completionHandler([], Error.youTubeAPIError(reason: "Invalid response"))
-                }
+            }
+            
+            DispatchQueue.main.async
+            {
+                completionHandler([], Error.youTubeAPIError(reason: "Invalid response"))
             }
         }
         task.resume()

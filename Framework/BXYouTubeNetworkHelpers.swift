@@ -29,24 +29,8 @@ internal class BXYouTubeNetworkHelpers
 {
     static let backgroundSessionIdentifier = "com.boinx.BXYouTubeSharing.backgroundSession"
     
-    static func categoriesRequest(languageCode: String, accessToken: String) -> URLRequest
-    {
-        var urlComponents = URLComponents(string: "https://www.googleapis.com/youtube/v3/videoCategories")!
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "part", value: "snippet"),
-            URLQueryItem(name: "regionCode", value: Locale.current.regionCode),
-            URLQueryItem(name: "hl", value: languageCode)
-        ]
-        
-        var request = URLRequest(url: urlComponents.url!)
-        
-        // Set request headers for authentication and propper content types.
-        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        
-        return request
-    }
+    
+    // MARK: - Authentication
     
     static func authenticationURL(clientID: String, redirectURI: String, scope: String) -> URL?
     {
@@ -101,6 +85,27 @@ internal class BXYouTubeNetworkHelpers
         return request
     }
     
+    static func channelInfoRequest(accessToken: String) -> URLRequest
+    {
+        var urlComponents = URLComponents(string: "https://www.googleapis.com/youtube/v3/channels")!
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "part", value: "snippet"),
+            URLQueryItem(name: "mine", value: "true")
+        ]
+        
+        var request = URLRequest(url: urlComponents.url!)
+        
+        // Set request headers for authentication and propper content types.
+        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        return request
+    }
+    
+    
+    // MARK: - Video Uploading
+    
     static func videoCreationRequest(for item: BXYouTubeUploadController.Item, ofSize fileSize: Int, accessToken: String) -> URLRequest
     {
         var urlComponents = URLComponents(string: "https://www.googleapis.com/upload/youtube/v3/videos")!
@@ -148,6 +153,28 @@ internal class BXYouTubeNetworkHelpers
         request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
         request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
         request.setValue("\(fileSize)", forHTTPHeaderField: "Content-Length")
+        
+        return request
+    }
+    
+    
+    // MARK: - Read-only API Access
+    
+    static func categoriesRequest(languageCode: String, accessToken: String) -> URLRequest
+    {
+        var urlComponents = URLComponents(string: "https://www.googleapis.com/youtube/v3/videoCategories")!
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "part", value: "snippet"),
+            URLQueryItem(name: "regionCode", value: Locale.current.regionCode),
+            URLQueryItem(name: "hl", value: languageCode)
+        ]
+        
+        var request = URLRequest(url: urlComponents.url!)
+        
+        // Set request headers for authentication and propper content types.
+        request.setValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         
         return request
     }

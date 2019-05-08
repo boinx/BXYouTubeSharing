@@ -24,6 +24,7 @@ public protocol BXYouTubeAuthenticationControllerDelegate: BXMainThreadDelegate
 {
     func youTubeAuthenticationControllerWillLogIn(_ authenticationController: BXYouTubeAuthenticationController) -> Void
     func youTubeAuthenticationControllerDidLogIn(_ authenticationController: BXYouTubeAuthenticationController, error: BXYouTubeAuthenticationController.Error?) -> Void
+    func youTubeAuthenticationControllerDidLogOut(_ authenticationController: BXYouTubeAuthenticationController) -> Void
 }
 
 public extension BXYouTubeAuthenticationControllerDelegate
@@ -167,14 +168,16 @@ public class BXYouTubeAuthenticationController
         return nil
     }
     
-    public func reset()
+    public func logOut()
     {
         self.accessToken = nil
         self.refreshToken = nil
+        
+        self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogOut(self) }
     }
     
     @discardableResult
-    public func login() -> Bool
+    public func logIn() -> Bool
     {
         guard let url = self.authenticationURL else
         {
@@ -235,7 +238,7 @@ public class BXYouTubeAuthenticationController
             
             if let error = error
             {
-                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.other(underlyingError: error)) }
+                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.other(underlyingError: error.localizedDescription)) }
                 return
             }
             else if let data = data
@@ -299,12 +302,12 @@ public class BXYouTubeAuthenticationController
 
 	/// Possible errors when trying to login to YouTube
 	
-	public enum Error : Swift.Error
+	public enum Error : Swift.Error, Equatable
 	{
 		case unknownClient
         case notLoggedIn
         case youTubeAPIError(reason: String)
-        case other(underlyingError: Swift.Error?)
+        case other(underlyingError: String)
 	}
 	
 	
@@ -389,7 +392,7 @@ public class BXYouTubeAuthenticationController
                 
                 if let error = error
                 {
-                    self._callAccessTokenCompletionHandlers(accessToken: nil, error: Error.other(underlyingError: error))
+                    self._callAccessTokenCompletionHandlers(accessToken: nil, error: Error.other(underlyingError: error.localizedDescription))
                     return
                 }
                 else if let data = data
@@ -428,7 +431,159 @@ public class BXYouTubeAuthenticationController
             handlers.forEach { $0(accessToken, error) }
         }
     }
-
+    
+    public struct AccountInfo
+    {
+        public let identifier: String
+        public let name: String
+        public let url: URL
+        
+        init(identifier: String, name: String, url: URL)
+        {
+            self.identifier = identifier
+            self.name = name
+            self.url = url
+        }
+        
+        /**
+         Sample dict:
+         
+         {
+          "kind": "youtube#channel",
+          "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/AaGabVLbNTUeguA4YaJDTwKdKv4\"",
+          "id": "UC4erAZFCJ_PLjf2bbYsvbFg",
+          "snippet": {
+            "title": "BoinxSoftwareLtd",
+            "description": "We make cool photo and video software for Mac, iPhone, iPad and Apple TV.",
+            "customUrl": "boinxsoftwareltd",
+            "publishedAt": "2007-09-13T13:12:57.000Z",
+            "thumbnails": {
+              "default": {
+                "url": "https://yt3.ggpht.com/a/AGF-l7-1r4qJFWgQLOo55m53PqG-w9zmBX3EFfBn=s88-mo-c-c0xffffffff-rj-k-no",
+                "width": 88,
+                "height": 88
+              },
+              "medium": {
+                "url": "https://yt3.ggpht.com/a/AGF-l7-1r4qJFWgQLOo55m53PqG-w9zmBX3EFfBn=s240-mo-c-c0xffffffff-rj-k-no",
+                "width": 240,
+                "height": 240
+              },
+              "high": {
+                "url": "https://yt3.ggpht.com/a/AGF-l7-1r4qJFWgQLOo55m53PqG-w9zmBX3EFfBn=s800-mo-c-c0xffffffff-rj-k-no",
+                "width": 800,
+                "height": 800
+              }
+            },
+            "localized": {
+              "title": "BoinxSoftwareLtd",
+              "description": "We make cool photo and video software for Mac, iPhone, iPad and Apple TV."
+            },
+            "country": "DE"
+          }
+        }
+        */
+        init?(withResponse dict: [String: Any])
+        {
+            guard let identifier = dict["id"] as? String,
+                  let snippet = dict["snippet"] as? [String: Any],
+                  let name = snippet["title"] as? String
+            else
+            {
+                return nil
+            }
+            
+            var url = URL(string: "https://www.youtube.com/channel/")!
+            let customURL = snippet["customUrl"] as? String
+            url.appendPathComponent(customURL ?? identifier)
+            
+            self.init(identifier: identifier, name: name, url: url)
+        }
+    }
+    
+    public func requestAccountInfo(_ completionHandler: @escaping (AccountInfo?, Error?) -> Void)
+    {
+        self.queue.addOperation
+        {
+            self._requestAccountInfo(completionHandler)
+        }
+    }
+ 
+    private func _requestAccountInfo(_ completionHandler: @escaping (AccountInfo?, Error?) -> Void)
+    {
+        assert(OperationQueue.current == self.queue, "BXYouTubeAuthenticationController.\(#function) may only be called on self.queue")
+    
+        self._requestAccessToken
+        {
+            (accessToken, error) in
+            
+            if let error = error
+            {
+                DispatchQueue.main.async
+                {
+                    completionHandler(nil, error)
+                }
+                return
+            }
+            
+            guard let accessToken = accessToken else
+            {
+                DispatchQueue.main.async
+                {
+                    completionHandler(nil, Error.notLoggedIn)
+                }
+                return
+            }
+            
+            let request = BXYouTubeNetworkHelpers.channelInfoRequest(accessToken: accessToken)
+            // Dispatch to background queue because we can't create the dataTask on self.queue.
+            DispatchQueue.background.async
+            {
+                let task = self.foregroundSession.dataTask(with: request)
+                {
+                    (data, _, error) in
+            
+                    if let error = error
+                    {
+                        DispatchQueue.main.async
+                        {
+                            completionHandler(nil, Error.other(underlyingError: error.localizedDescription))
+                        }
+                        return
+                    }
+                    else if let data = data,
+                            let payload = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
+                    {
+                        if let errorDict = payload["error"] as? [String: Any],
+                           let errorDescription = errorDict["message"] as? String
+                        {
+                            DispatchQueue.main.async
+                            {
+                                completionHandler(nil, Error.youTubeAPIError(reason: errorDescription))
+                            }
+                            return
+                        }
+                        else if let items = payload["items"] as? [[String: Any]]
+                        {
+                            // Extract assignable categories from items.
+                            let accountInfo = items.lazy.compactMap({ AccountInfo(withResponse: $0) }).first
+                            
+                            DispatchQueue.main.async
+                            {
+                                completionHandler(accountInfo, nil)
+                            }
+                            return
+                        }
+                    }
+                    
+                    DispatchQueue.main.async
+                    {
+                        completionHandler(nil, Error.youTubeAPIError(reason: "Invalid response"))
+                    }
+                }
+                task.resume()
+            }
+        }
+    }
 }
 	
 

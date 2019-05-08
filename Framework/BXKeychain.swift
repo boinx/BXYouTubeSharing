@@ -15,7 +15,7 @@ struct BXKeychain
     {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
                                     kSecMatchLimit as String: kSecMatchLimitOne,
-                                    kSecAttrLabel as String: identifier,
+                                    kSecAttrAccount as String: identifier,
                                     kSecReturnData as String: true]
         
         var item: CFTypeRef?
@@ -29,7 +29,7 @@ struct BXKeychain
     static func set(_ data: Data, forKey identifier: String)
     {
         let updateQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                          kSecAttrLabel as String: identifier]
+                                          kSecAttrAccount as String: identifier]
         
         var status = SecItemUpdate(updateQuery as CFDictionary, [kSecValueData as String: data as CFData] as CFDictionary)
         var actionPerformed = "Updated"
@@ -37,7 +37,7 @@ struct BXKeychain
         if status == errSecItemNotFound
         {
             let addQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                           kSecAttrLabel as String: identifier,
+                                           kSecAttrAccount as String: identifier,
                                            kSecValueData as String: data as CFData]
             
             status = SecItemAdd(addQuery as CFDictionary, nil)
@@ -50,7 +50,7 @@ struct BXKeychain
     static func deleteData(forKey identifier: String)
     {
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    kSecAttrLabel as String: identifier]
+                                    kSecAttrAccount as String: identifier]
         
         let status = SecItemDelete(query as CFDictionary)
         

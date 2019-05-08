@@ -26,6 +26,8 @@
 		D05AB1D2225F913700205C7F /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB1D1225F913700205C7F /* ShareViewController.swift */; };
 		D05AB1D5225F913700205C7F /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05AB1D3225F913700205C7F /* MainInterface.storyboard */; };
 		D05AB1D9225F913700205C7F /* BXYouTubeSharing-Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D05AB1CF225F913700205C7F /* BXYouTubeSharing-Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D08AC60C22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08AC60B22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift */; };
+		D08AC60E2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08AC60D2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift */; };
 		D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */; };
 		D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -113,6 +115,8 @@
 		D05AB1D1225F913700205C7F /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		D05AB1D4225F913700205C7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		D05AB1D6225F913700205C7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D08AC60B22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BXYouTubeAuthenticationController+PromiseKit.swift"; sourceTree = "<group>"; };
+		D08AC60D2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BXYouTubeUploadController+PromiseKit.swift"; sourceTree = "<group>"; };
 		D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXYouTubeAuthenticationController.swift; sourceTree = "<group>"; };
 		D0987D54226EEA1300BCF772 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		D0987D58226EEA3100BCF772 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -211,7 +215,9 @@
 				D05AB1A7225F49AA00205C7F /* Info.plist */,
 				D05AB1A6225F49AA00205C7F /* BXYouTubeSharing_Framework.h */,
 				D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */,
+				D08AC60B22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift */,
 				D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */,
+				D08AC60D2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift */,
 				48B96C8B2260E22700E89EF6 /* Helpers */,
 			);
 			path = Framework;
@@ -437,8 +443,10 @@
 				48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */,
 				4859564922789F7800F992EF /* BXKeychain.swift in Sources */,
 				48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */,
+				D08AC60E2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift in Sources */,
 				D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */,
 				D05AB1C9225F837C00205C7F /* BXYouTubeUploadController.swift in Sources */,
+				D08AC60C22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift in Sources */,
 				D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */,
 				489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */,
 			);

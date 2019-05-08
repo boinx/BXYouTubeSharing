@@ -301,7 +301,8 @@ public class BXYouTubeUploadController: NSObject
 	
 	public func upload(_ item:Item, notifySubscribers:Bool = true) throws
 	{
-        // FIXME: uploadItem can be modified from the background queue
+ 		#warning("FIXME: uploadItem can be modified from the background queue")
+
         guard self.uploadItem == nil else
         {
             throw Error.uploadAlreadyInProgress
@@ -321,8 +322,8 @@ public class BXYouTubeUploadController: NSObject
 		
         self.delegate?.onMainThread { $0.willStartUpload() }
 
-        // TODO: Pass through notifySubscribers option
-  
+ 		#warning("TODO: Pass through notifySubscribers option")
+
         let videoCreationRequest = BXYouTubeNetworkHelpers.videoCreationRequest(for: item, ofSize: fileSize, accessToken: accessToken)
   
         let creationTask = self.foregroundSession.dataTask(with: videoCreationRequest)
@@ -353,6 +354,7 @@ public class BXYouTubeUploadController: NSObject
                         let errorMessage = errorObj["message"] as? String
                 {
                 	#warning("TODO: Handle Unauthorized/youtubeSignupRequired error")
+                	
                     _self._resetState()
                     _self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.youTubeAPIError(reason: errorMessage)) }
                 }

@@ -215,8 +215,8 @@
 				D05AB1A7225F49AA00205C7F /* Info.plist */,
 				D05AB1A6225F49AA00205C7F /* BXYouTubeSharing_Framework.h */,
 				D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */,
-				D08AC60B22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift */,
 				D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */,
+				D08AC60B22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift */,
 				D08AC60D2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift */,
 				48B96C8B2260E22700E89EF6 /* Helpers */,
 			);

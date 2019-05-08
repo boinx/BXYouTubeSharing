@@ -18,7 +18,9 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 {
 	// Outlets
 	
-	@IBOutlet weak var selectFileButton:UIButton!
+    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var logoutButton: UIButton!
+    @IBOutlet weak var selectFileButton:UIButton!
 	@IBOutlet weak var urlField:UITextField!
 	@IBOutlet weak var titleField:UITextField!
 	@IBOutlet weak var descriptionField:UITextView!
@@ -56,6 +58,7 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 		self.progressView.progress = 0.0
 		
 		self.loadCategories()
+        self.updateLoginButton()
         self.updateOpenInYouTubeButton()
   
         self.fileURL = Bundle.main.url(forResource: "movie", withExtension: "mov")
@@ -110,6 +113,30 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
 		self.shareButton.isEnabled = fileURL != nil
 	}
  
+    private func updateLoginButton()
+    {
+        BXYouTubeAuthenticationController.shared?.requestAccountInfo({ (info, error) in
+            if let error = error
+            {
+                if error == .notLoggedIn
+                {
+                    self.loginButton.setTitle("Login", for: .normal)
+                }
+                else
+                {
+                    self.loginButton.setTitle(error.localizedDescription, for: .normal)
+                }
+                self.logoutButton.isEnabled = false
+                return
+            }
+            else if let info = info
+            {
+                self.loginButton.setTitle(info.name, for: .normal)
+                self.logoutButton.isEnabled = true
+            }
+        })
+    }
+ 
     private func updateOpenInYouTubeButton()
     {
         self.openInYouTubeButton.isEnabled = (self.webURL != nil)
@@ -161,12 +188,12 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
         
         controller.delegate = self
         
-        controller.login()
+        controller.logIn()
     }
     
-    @IBAction func reset(_ sender: Any)
+    @IBAction func logOut(_ sender: Any)
     {
-        BXYouTubeAuthenticationController.shared!.reset()
+        BXYouTubeAuthenticationController.shared!.logOut()
     }
     
     @IBAction func openInYouTube(_ sender: Any)
@@ -234,7 +261,7 @@ extension BXYouTubeSharingViewController: BXYouTubeAuthenticationControllerDeleg
         
         alert.addAction(UIAlertAction(title: "Go to Safari", style: .default, handler: { (action) in
             self.loginAlert = nil;
-            BXYouTubeAuthenticationController.shared!.login()
+            BXYouTubeAuthenticationController.shared!.logIn()
         }))
     
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
@@ -252,6 +279,7 @@ extension BXYouTubeSharingViewController: BXYouTubeAuthenticationControllerDeleg
     
     func youTubeAuthenticationControllerDidLogIn(_ authenticationController: BXYouTubeAuthenticationController, error: BXYouTubeAuthenticationController.Error?)
     {
+        self.updateLoginButton()
         self.loadCategories()
         
         self.loginAlert?.dismiss(animated: true, completion: {
@@ -263,6 +291,11 @@ extension BXYouTubeSharingViewController: BXYouTubeAuthenticationControllerDeleg
                 self.present(errorAlert, animated: true, completion: nil)
             }
         })
+    }
+    
+    func youTubeAuthenticationControllerDidLogOut(_ authenticationController: BXYouTubeAuthenticationController)
+    {
+        self.updateLoginButton()
     }
 }
 

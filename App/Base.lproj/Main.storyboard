@@ -22,148 +22,232 @@
                                 <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="5tT-qy-gsz">
-                                        <rect key="frame" x="20" y="0.0" width="794" height="1121"/>
+                                        <rect key="frame" x="20" y="0.0" width="794" height="1149.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uCH-Va-HZv">
-                                                <rect key="frame" x="0.0" y="0.0" width="794" height="14.5"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-w7-ly2">
+                                                <rect key="frame" x="0.0" y="0.0" width="794" height="5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="5" id="2BD-6p-XoE"/>
+                                                </constraints>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4a-Qu-cnq">
+                                                <rect key="frame" x="0.0" y="20" width="794" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PCo-14-exm">
-                                                <rect key="frame" x="0.0" y="29.5" width="794" height="50"/>
+                                                <rect key="frame" x="0.0" y="49.5" width="794" height="35"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Ox-W6-RVB">
-                                                        <rect key="frame" x="375" y="8.5" width="44" height="33"/>
+                                                        <rect key="frame" x="0.0" y="1" width="44" height="33"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <state key="normal" title="Login"/>
+                                                        <attributedString key="userComments">
+                                                            <fragment content="DNL"/>
+                                                        </attributedString>
                                                         <connections>
                                                             <action selector="login:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oPL-7p-Car"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OzZ-Rh-gmW">
-                                                        <rect key="frame" x="755" y="10" width="39" height="30"/>
-                                                        <state key="normal" title="Reset"/>
+                                                        <rect key="frame" x="738" y="1" width="56" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <state key="normal" title="Logout"/>
+                                                        <attributedString key="userComments">
+                                                            <fragment content="DNL"/>
+                                                        </attributedString>
                                                         <connections>
-                                                            <action selector="reset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6qp-aY-7uQ"/>
+                                                            <action selector="logOut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6qp-aY-7uQ"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="OzZ-Rh-gmW" firstAttribute="centerY" secondItem="PCo-14-exm" secondAttribute="centerY" id="860-NB-9gz"/>
+                                                    <constraint firstItem="7Ox-W6-RVB" firstAttribute="leading" secondItem="PCo-14-exm" secondAttribute="leading" id="E6Q-sW-1gm"/>
                                                     <constraint firstAttribute="trailing" secondItem="OzZ-Rh-gmW" secondAttribute="trailing" id="Heo-5B-XLU"/>
                                                     <constraint firstItem="7Ox-W6-RVB" firstAttribute="centerY" secondItem="PCo-14-exm" secondAttribute="centerY" id="Sj9-OV-hdV"/>
-                                                    <constraint firstItem="7Ox-W6-RVB" firstAttribute="centerX" secondItem="PCo-14-exm" secondAttribute="centerX" id="V2k-5R-qb4"/>
-                                                    <constraint firstAttribute="height" constant="50" id="kgj-4O-aYG"/>
+                                                    <constraint firstAttribute="height" constant="35" id="kgj-4O-aYG"/>
                                                 </constraints>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uCH-Va-HZv">
+                                                <rect key="frame" x="0.0" y="99.5" width="794" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
+                                            </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="sBt-mm-ZyH">
-                                                <rect key="frame" x="0.0" y="94.5" width="794" height="39"/>
+                                                <rect key="frame" x="0.0" y="129" width="794" height="33"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PMx-iV-B7c">
-                                                        <rect key="frame" x="0.0" y="0.0" width="726" height="39"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="735" height="33"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <textInputTraits key="textInputTraits"/>
+                                                        <attributedString key="userComments">
+                                                            <fragment content="DNL"/>
+                                                        </attributedString>
                                                     </textField>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vca-Q3-e8Q">
-                                                        <rect key="frame" x="734" y="0.0" width="60" height="39"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                                        <rect key="frame" x="743" y="0.0" width="51" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <state key="normal" title="Select"/>
+                                                        <attributedString key="userComments">
+                                                            <fragment content="DNL"/>
+                                                        </attributedString>
                                                         <connections>
                                                             <action selector="selectFile:" destination="BYZ-38-t0r" eventType="touchUpInside" id="h2K-jJ-80V"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e13-gt-Ch1">
-                                                <rect key="frame" x="0.0" y="148.5" width="794" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="177" width="794" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ak2-56-cOV">
-                                                <rect key="frame" x="0.0" y="178" width="794" height="30"/>
+                                                <rect key="frame" x="0.0" y="206.5" width="794" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6j-2w-fgv">
-                                                <rect key="frame" x="0.0" y="223" width="794" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="251.5" width="794" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </label>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2RJ-ja-fSH">
-                                                <rect key="frame" x="0.0" y="252.5" width="794" height="128"/>
+                                                <rect key="frame" x="0.0" y="281" width="794" height="128"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="999" constant="128" id="LL8-cD-Y9E"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </textView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tags" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SVv-6L-SIu">
-                                                <rect key="frame" x="0.0" y="395.5" width="794" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="424" width="794" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1mt-4S-3MX">
-                                                <rect key="frame" x="0.0" y="425" width="794" height="30"/>
+                                                <rect key="frame" x="0.0" y="453.5" width="794" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EJp-V9-ekk">
-                                                <rect key="frame" x="0.0" y="470" width="794" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="498.5" width="794" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </label>
                                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cu3-Yw-GNw">
-                                                <rect key="frame" x="0.0" y="499.5" width="794" height="216"/>
+                                                <rect key="frame" x="0.0" y="528" width="794" height="216"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                                 <connections>
                                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="fjq-h4-ebA"/>
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Bbx-dQ-3aq"/>
                                                 </connections>
                                             </pickerView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Privacy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UmE-1J-9oS">
-                                                <rect key="frame" x="0.0" y="730.5" width="794" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="759" width="794" height="14.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                 <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </label>
                                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dp3-fm-fjL">
-                                                <rect key="frame" x="0.0" y="760" width="794" height="216"/>
+                                                <rect key="frame" x="0.0" y="788.5" width="794" height="216"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                                 <connections>
                                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="QCo-3q-cUB"/>
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="yL7-lJ-t9u"/>
                                                 </connections>
                                             </pickerView>
                                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8NY-hQ-lA4">
-                                                <rect key="frame" x="0.0" y="991" width="794" height="39"/>
+                                                <rect key="frame" x="0.0" y="1019.5" width="794" height="39"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                 <state key="normal" title="Share"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                                 <connections>
                                                     <action selector="share:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xaA-9p-YMM"/>
                                                 </connections>
                                             </button>
                                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="qNA-yb-dcG">
-                                                <rect key="frame" x="0.0" y="1045" width="794" height="2"/>
+                                                <rect key="frame" x="0.0" y="1073.5" width="794" height="2"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </progressView>
                                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EGI-LJ-zdc">
-                                                <rect key="frame" x="0.0" y="1062" width="794" height="39"/>
+                                                <rect key="frame" x="0.0" y="1090.5" width="794" height="39"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                 <state key="normal" title="Open in YouTube"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                                 <connections>
                                                     <action selector="openInYouTube:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qxH-QI-u1V"/>
                                                     <action selector="share:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0iN-pn-PMh"/>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d4f-g0-BUR">
-                                                <rect key="frame" x="0.0" y="1116" width="794" height="5"/>
+                                                <rect key="frame" x="0.0" y="1144.5" width="794" height="5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="5" id="rGX-gT-1SA"/>
                                                 </constraints>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
                                             </view>
                                         </subviews>
+                                        <attributedString key="userComments">
+                                            <fragment content="DNL"/>
+                                        </attributedString>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -174,6 +258,9 @@
                                     <constraint firstAttribute="trailing" secondItem="5tT-qy-gsz" secondAttribute="trailing" constant="20" id="kkJ-rU-oeV"/>
                                     <constraint firstItem="5tT-qy-gsz" firstAttribute="width" secondItem="B94-Lk-InJ" secondAttribute="width" constant="-40" id="phM-VE-tca"/>
                                 </constraints>
+                                <attributedString key="userComments">
+                                    <fragment content="DNL"/>
+                                </attributedString>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -183,11 +270,20 @@
                             <constraint firstItem="B94-Lk-InJ" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="dxl-g0-2Vg"/>
                             <constraint firstAttribute="bottom" secondItem="B94-Lk-InJ" secondAttribute="bottom" id="zlm-SS-9R6"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY">
+                            <attributedString key="userComments">
+                                <fragment content="DNL"/>
+                            </attributedString>
+                        </viewLayoutGuide>
+                        <attributedString key="userComments">
+                            <fragment content="DNL"/>
+                        </attributedString>
                     </view>
                     <connections>
                         <outlet property="categoryPicker" destination="Cu3-Yw-GNw" id="6xf-gn-H2N"/>
                         <outlet property="descriptionField" destination="2RJ-ja-fSH" id="ePV-sY-gDM"/>
+                        <outlet property="loginButton" destination="7Ox-W6-RVB" id="iuh-Ux-qtc"/>
+                        <outlet property="logoutButton" destination="OzZ-Rh-gmW" id="zrp-md-1oE"/>
                         <outlet property="openInYouTubeButton" destination="EGI-LJ-zdc" id="5ec-Dm-Kph"/>
                         <outlet property="privacyPicker" destination="Dp3-fm-fjL" id="ln9-Tc-k30"/>
                         <outlet property="progressView" destination="qNA-yb-dcG" id="Ac4-3Q-5vb"/>

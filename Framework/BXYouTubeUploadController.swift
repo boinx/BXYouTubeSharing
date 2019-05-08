@@ -329,12 +329,12 @@ public class BXYouTubeUploadController: NSObject
         {
         	[weak self] (data, response, error) in
 			
-            guard let self = self else { return }
+            guard let _self = self else { return }
             
             if let error = error
             {
-                self._resetState()
-                self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: error)) }
+                _self._resetState()
+                _self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: error)) }
             }
             else if let httpResponse = response as? HTTPURLResponse
             {
@@ -342,24 +342,25 @@ public class BXYouTubeUploadController: NSObject
                    let uploadLocation = httpResponse.allHeaderFields["Location"] as? String,
                    let uploadURL = URL(string: uploadLocation)
                 {
-                    self.delegate?.onMainThread { $0.didStartUpload() }
+                    _self.delegate?.onMainThread { $0.didStartUpload() }
 
-                    self.uploadURL = uploadURL
-                    self._startUploadTask()
+                    _self.uploadURL = uploadURL
+                    _self._startUploadTask()
                 }
                 else if let data = data,
                         let jsonObj = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any],
                         let errorObj = jsonObj["error"] as? [String: Any],
                         let errorMessage = errorObj["message"] as? String
                 {
-                    self._resetState()
-                    self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.youTubeAPIError(reason: errorMessage)) }
+                	#warning("TODO: Handle Unauthorized/youtubeSignupRequired error")
+                    _self._resetState()
+                    _self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.youTubeAPIError(reason: errorMessage)) }
                 }
             }
             else
             {
-                self._resetState()
-                self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: nil)) }
+                _self._resetState()
+                _self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: nil)) }
             }
         }
         

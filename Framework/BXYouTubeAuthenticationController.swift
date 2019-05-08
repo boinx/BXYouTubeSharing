@@ -194,78 +194,77 @@ public class BXYouTubeAuthenticationController
     
     public func handleOAuthResponse(returnURL: URL) -> Bool
     {
-        if let urlComponents = URLComponents(url: returnURL, resolvingAgainstBaseURL: false),
-           returnURL.pathComponents.last == "BXYouTubeSharing"
+        guard let urlComponents = URLComponents(url: returnURL, resolvingAgainstBaseURL: false),
+              returnURL.pathComponents.last == "BXYouTubeSharing"
+        else
         {
-            // complete authentication
+            // Host app needs to handle request.
+            return false
+        }
+        
+        // Request will be handled by this framework.
+        
+        if let scope = urlComponents.queryItems?.first(where: { $0.name == "scope" })?.value
+        {
+            // Validate scope only if present.
+            let scopeSet = Set(scope.components(separatedBy: " "))
             
-            if let scope = urlComponents.queryItems?.first(where: { $0.name == "scope" })?.value
+            if BXYouTubeAuthenticationController.scope != scopeSet
             {
-                // Validate scope only if present.
-                let scopeSet = Set(scope.components(separatedBy: " "))
-                
-                if BXYouTubeAuthenticationController.scope != scopeSet
-                {
-                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "insufficient permission")) }
-                    return true
-                }
-            }
-            
-            if let error = urlComponents.queryItems?.first(where: { $0.name == "error" })?.value
-            {
-                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
+                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "insufficient permission")) }
                 return true
             }
-            
-            guard let code = urlComponents.queryItems?.first(where: { $0.name == "code" })?.value else
-            {
-                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "invalid response")) }
-                return true
-            }
-            
-            let request = BXYouTubeNetworkHelpers.accessTokenRequest(clientID: self.clientID, redirectURI: self.redirectURI, authCode: code)
-            let task = self.foregroundSession.dataTask(with: request)
-            {
-                (data, _, error) in
-                
-                if let error = error
-                {
-                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.other(underlyingError: error)) }
-                    return
-                }
-                else if let data = data
-                {
-                    let (accessToken, refreshToken, error) = self.extractValues(from: data)
-                    
-                    if let accessToken = accessToken,
-                       let refreshToken = refreshToken
-                    {
-                        // Valid Data
-                        self.accessToken = accessToken
-                        self.refreshToken = refreshToken
-                        
-                        self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: nil) }
-                        return
-                    }
-                    else if let error = error
-                    {
-                        // YouTube API Error
-                        self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
-                        return
-                    }
-                }
-                
-                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "invalid response")) }
-                return
-            }
-            task.resume()
-            
-            // Open app request was handled by this framework.
+        }
+        
+        if let error = urlComponents.queryItems?.first(where: { $0.name == "error" })?.value
+        {
+            self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
             return true
         }
         
-        // Host app needs to handle request.
-        return false
+        guard let code = urlComponents.queryItems?.first(where: { $0.name == "code" })?.value else
+        {
+            self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "invalid response")) }
+            return true
+        }
+        
+        let request = BXYouTubeNetworkHelpers.accessTokenRequest(clientID: self.clientID, redirectURI: self.redirectURI, authCode: code)
+        let task = self.foregroundSession.dataTask(with: request)
+        {
+            (data, _, error) in
+            
+            if let error = error
+            {
+                self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.other(underlyingError: error)) }
+                return
+            }
+            else if let data = data
+            {
+                let (accessToken, refreshToken, error) = self.extractValues(from: data)
+                
+                if let accessToken = accessToken,
+                   let refreshToken = refreshToken
+                {
+                    // Valid Data
+                    self.accessToken = accessToken
+                    self.refreshToken = refreshToken
+                    
+                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: nil) }
+                    return
+                }
+                else if let error = error
+                {
+                    // YouTube API Error
+                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
+                    return
+                }
+            }
+            
+            self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "invalid response")) }
+        }
+        task.resume()
+        
+        return true
     }
     
     private func extractValues(from data: Data) -> (accessToken: AccessToken?, refreshToken: String?, error: String?)

@@ -207,11 +207,32 @@ public class BXYouTubeAuthenticationController
             self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "invalid response")) }
         }
 		
-        task.resume()
+		// If app is not fully in foreground state, we need to wait before starting the task. This avoid
+		// an obscure error that is mentioned at: https://github.com/AFNetworking/AFNetworking/issues/4279
+		
+		self.start(task)
 		
         return true
     }
 	
+	
+	/// Helper function that waits before starting a task until the app is fully in the foreground. Must
+	/// not be called from a bacjground thread!
+	
+	private func start(_ task:URLSessionDataTask, maxRetryCount:Int = 100)
+	{
+		if UIApplication.shared.applicationState == .active || maxRetryCount == 0
+		{
+			task.resume()
+		}
+		else
+		{
+			DispatchQueue.main.asyncAfter(deadline: .now()+0.1)
+			{
+				self.start(task, maxRetryCount: maxRetryCount-1)
+			}
+		}
+	}
 	
     private var authenticationURL: URL?
     {

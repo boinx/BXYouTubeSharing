@@ -229,7 +229,7 @@ public class BXYouTubeAuthenticationController
 		{
 			DispatchQueue.main.asyncAfter(deadline: .now()+delay)
 			{
-				self._start(task, maxRetryCount: maxRetryCount-1)
+				self._startWhenInForeground(task, maxRetryCount: maxRetryCount-1)
 			}
 		}
 	}

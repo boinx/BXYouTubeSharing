@@ -13,11 +13,10 @@ import PromiseKit
 public extension BXYouTubeUploadController
 {
 
-	/// Request an accessToken. This triggers the login process to YouTube if the accessToken was not yet available.
-	/// An expired accessToken is automatically renewed if possible.
+	/// Retrieves the list of video categories with the names loclized to a specified language.
 	/// - parameter languageCode: The category names are requested for a particular language like "en", "de", or "fr"
 	/// - parameter maxRetries: The maximum number of retries before giving up in case there is a problem
-	/// - returns: A list of Categories
+	/// - returns: An array of Category structs
 	
 	func categories(for languageCode:String, maxRetries: Int = 3) -> Promise<[Category]>
 	{

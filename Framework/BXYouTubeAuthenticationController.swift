@@ -243,6 +243,10 @@ public class BXYouTubeAuthenticationController
 //----------------------------------------------------------------------------------------------------------------------
 
 
+	/// Requests the current accessToken if available. If the current accessToken is expired or soon to expire,
+	/// it will be automatically renewed.
+	/// - parameter completionHandler: The handler either returns the accessToken String or an Error
+
     private func _requestAccessToken(_ completionHandler: @escaping (String?, Error?) -> Void)
     {
         assert(OperationQueue.current == self.queue, "BXYouTubeAuthenticationController.\(#function) may only be called on self.queue")
@@ -321,17 +325,9 @@ public class BXYouTubeAuthenticationController
 //----------------------------------------------------------------------------------------------------------------------
 
 
-    private func _callAccessTokenCompletionHandlers(accessToken: String?, error: Error?)
-    {
-        let handlers = self.completionHandlers
-        self.completionHandlers = []
-        DispatchQueue.main.async
-        {
-            handlers.forEach { $0(accessToken, error) }
-        }
-    }
+ 	/// Loads the last known AccessToken from the users keychain
 	
-    private func _loadAccessToken() -> AccessToken?
+   private func _loadAccessToken() -> AccessToken?
     {
         let identifier = self.keychainIdentifier(for: .accessToken)
         if let data = BXKeychain.data(forKey: identifier),
@@ -343,6 +339,8 @@ public class BXYouTubeAuthenticationController
         return nil
     }
 	
+	
+	/// Helper function that extracts various info from received Data
 	
     private func _extractValues(from data: Data) -> (accessToken: AccessToken?, refreshToken: String?, error: String?)
     {
@@ -371,12 +369,24 @@ public class BXYouTubeAuthenticationController
     }
 
 
+	/// Calls the completionHandlers for all requests that have accumulated lately
+	
+    private func _callAccessTokenCompletionHandlers(accessToken: String?, error: Error?)
+    {
+        let handlers = self.completionHandlers
+        self.completionHandlers = []
+		
+        DispatchQueue.main.async
+        {
+            handlers.forEach { $0(accessToken, error) }
+        }
+    }
+	
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
-    private var refreshAccessTokenRequestIsInFlight = false
-	
-    private var completionHandlers: [(String?,Error?)->Void] = []
+	/// This struct holds the accessToken String and its expiration info
 	
 	private struct AccessToken: Codable
     {
@@ -389,7 +399,7 @@ public class BXYouTubeAuthenticationController
         }
     }
 	
-	/// The currently valid access token for the user
+	/// The current AccessToken for the user
 	
     private var accessToken: AccessToken? = nil
     {
@@ -413,6 +423,16 @@ public class BXYouTubeAuthenticationController
             }
         }
     }
+	
+	/// Returns true if a new accessToken is currently being retrieved. In this case additional request are
+	/// redundant and will be suppressed.
+	
+    private var refreshAccessTokenRequestIsInFlight = false
+	
+	/// Each request has a completionHandler. Since the host app can issue multiple requests, all completionHandlers
+	/// are executed once the result has been received from the YouTube server.
+	
+    private var completionHandlers: [(String?,Error?)->Void] = []
 	
 
 //----------------------------------------------------------------------------------------------------------------------

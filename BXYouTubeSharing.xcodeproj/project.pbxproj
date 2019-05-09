@@ -28,6 +28,7 @@
 		D05AB1D9225F913700205C7F /* BXYouTubeSharing-Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D05AB1CF225F913700205C7F /* BXYouTubeSharing-Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D08AC60C22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08AC60B22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift */; };
 		D08AC60E2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08AC60D2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift */; };
+		D08AC61022844CB300DFBD66 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08AC60F22844CB300DFBD66 /* PromiseKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */; };
 		D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -117,6 +118,7 @@
 		D05AB1D6225F913700205C7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D08AC60B22832B3100DFBD66 /* BXYouTubeAuthenticationController+PromiseKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BXYouTubeAuthenticationController+PromiseKit.swift"; sourceTree = "<group>"; };
 		D08AC60D2283375C00DFBD66 /* BXYouTubeUploadController+PromiseKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BXYouTubeUploadController+PromiseKit.swift"; sourceTree = "<group>"; };
+		D08AC60F22844CB300DFBD66 /* PromiseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PromiseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXYouTubeAuthenticationController.swift; sourceTree = "<group>"; };
 		D0987D54226EEA1300BCF772 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		D0987D58226EEA3100BCF772 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D08AC61022844CB300DFBD66 /* PromiseKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +248,7 @@
 		D05AB1DE225F926700205C7F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D08AC60F22844CB300DFBD66 /* PromiseKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

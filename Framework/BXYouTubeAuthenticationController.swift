@@ -210,7 +210,7 @@ public class BXYouTubeAuthenticationController
 		// If app is not fully in foreground state, we need to wait before starting the task. This avoid
 		// an obscure error that is mentioned at: https://github.com/AFNetworking/AFNetworking/issues/4279
 		
-		self._startWhenInForeground(task)
+		self._whenInForeground(start:task)
 		
         return true
     }
@@ -219,7 +219,7 @@ public class BXYouTubeAuthenticationController
 	/// Helper function that waits before starting a task until the app is fully in the foreground state.
 	/// Must not be called from a background thread!
 	
-	private func _startWhenInForeground(_ task:URLSessionDataTask, delay:Double = 0.1, maxRetryCount:Int = 100)
+	private func _whenInForeground(start task:URLSessionDataTask, delay:Double = 0.1, maxRetryCount:Int = 100)
 	{
 		if UIApplication.shared.applicationState == .active || maxRetryCount == 0
 		{
@@ -229,7 +229,7 @@ public class BXYouTubeAuthenticationController
 		{
 			DispatchQueue.main.asyncAfter(deadline: .now()+delay)
 			{
-				self._startWhenInForeground(task, maxRetryCount: maxRetryCount-1)
+				self._whenInForeground(start: task, maxRetryCount: maxRetryCount-1)
 			}
 		}
 	}

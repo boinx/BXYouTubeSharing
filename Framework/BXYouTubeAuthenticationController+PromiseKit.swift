@@ -16,7 +16,7 @@ public extension BXYouTubeAuthenticationController
 	/// Request an accessToken. This triggers the login process to YouTube if the accessToken was not yet available.
 	/// An expired accessToken is automatically renewed if possible.
 	
-	func requestAccessToken() -> Promise<String>
+	func accessToken() -> Promise<String>
 	{
 		return Promise
 		{
@@ -45,7 +45,7 @@ public extension BXYouTubeAuthenticationController
 	
 	/// Requests the account info for the currently logged in user.
 	
-	func requestAccountInfo() -> Promise<AccountInfo>
+	func accountInfo() -> Promise<AccountInfo>
     {
 		return Promise
 		{

@@ -24,7 +24,7 @@ public extension BXYouTubeUploadController
 		{
 			seal in
 
-			self.categories(for: languageCode, maxRetries: maxRetries)
+			self.requestCategories(for: languageCode, maxRetries: maxRetries)
 			{
 				(categories,error) in
 

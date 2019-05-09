@@ -157,7 +157,7 @@ public class BXYouTubeUploadController: NSObject
 	/// Retrieves the list of categories that are known to YouTube. Specify a language code like "en" or "de"
 	/// to localize the names.
 	
-	public func categories(for languageCode:String, maxRetries: Int = 3, completionHandler: @escaping ([Category], Error?)->Void)
+	public func requestCategories(for languageCode:String, maxRetries: Int = 3, completionHandler: @escaping ([Category], Error?)->Void)
 	{
         guard let accessToken = self.accessToken else
         {
@@ -168,7 +168,7 @@ public class BXYouTubeUploadController: NSObject
                     return
                 }
                 self.accessToken = accessToken
-                self.categories(for: languageCode, maxRetries: maxRetries-1, completionHandler: completionHandler)
+                self.requestCategories(for: languageCode, maxRetries: maxRetries-1, completionHandler: completionHandler)
             })
             return
         }
@@ -204,7 +204,7 @@ public class BXYouTubeUploadController: NSObject
                                 return
                             }
                             self.accessToken = accessToken
-                            self.categories(for: languageCode, maxRetries: maxRetries-1, completionHandler: completionHandler)
+                            self.requestCategories(for: languageCode, maxRetries: maxRetries-1, completionHandler: completionHandler)
                         })
                         return
                     }

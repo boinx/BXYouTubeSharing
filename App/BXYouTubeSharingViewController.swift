@@ -67,7 +67,7 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
  
     private func loadCategories()
     {
-        BXYouTubeUploadController.shared.categories(for: "en", completionHandler: { (categories, error) in
+        BXYouTubeUploadController.shared.requestCategories(for: "en", completionHandler: { (categories, error) in
             if let error = error
             {
                 print("error fetching categories \(error)")

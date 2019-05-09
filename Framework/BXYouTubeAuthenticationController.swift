@@ -31,8 +31,8 @@ public class BXYouTubeAuthenticationController
 		self.clientSecret = clientSecret
         self.redirectURI = redirectURI
   
-        self.refreshToken = self.loadRefreshToken()
-        self.accessToken = self._loadAccessToken()
+        self.storedRefreshToken = self._loadRefreshToken()
+        self.storedAccessToken = self._loadAccessToken()
 	}
  
  	/// Convenience singleton instance of this controller. It is not instantiated automatically, because
@@ -122,8 +122,8 @@ public class BXYouTubeAuthenticationController
 	
     public func logOut()
     {
-        self.accessToken = nil
-        self.refreshToken = nil
+        self.storedAccessToken = nil
+        self.storedRefreshToken = nil
         self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogOut(self) }
     }
 	
@@ -190,8 +190,8 @@ public class BXYouTubeAuthenticationController
                    let refreshToken = refreshToken
                 {
                     // Valid Data
-                    self.accessToken = accessToken
-                    self.refreshToken = refreshToken
+                    self.storedAccessToken = accessToken
+                    self.storedRefreshToken = refreshToken
 					
                     self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: nil) }
                     return
@@ -272,7 +272,7 @@ public class BXYouTubeAuthenticationController
     {
         assert(OperationQueue.current == self.queue, "BXYouTubeAuthenticationController.\(#function) may only be called on self.queue")
 		
-        guard let storedAccessToken = self.accessToken, let storedRefreshToken = self.refreshToken else
+        guard let storedAccessToken = self.storedAccessToken, let storedRefreshToken = self.storedRefreshToken else
         {
             DispatchQueue.main.async
             {
@@ -321,10 +321,10 @@ public class BXYouTubeAuthenticationController
 					
                     if let accessToken = accessToken
                     {
-                        self.accessToken = accessToken
+                        self.storedAccessToken = accessToken
                     }
 
-                    let responseAccessToken: String? = self.accessToken?.value
+                    let responseAccessToken: String? = self.storedAccessToken?.value
                     var responseError: Error? = nil
 					
                     if let errorReason = errorReason
@@ -422,12 +422,12 @@ public class BXYouTubeAuthenticationController
 	
 	/// The current AccessToken for the user
 	
-    private var accessToken: AccessToken? = nil
+    private var storedAccessToken: AccessToken? = nil
     {
         didSet
         {
             let identifier = self.keychainIdentifier(for: .accessToken)
-            if let accessToken = self.accessToken
+            if let accessToken = self.storedAccessToken
             {
                 if let data = try? JSONEncoder().encode(accessToken)
                 {
@@ -462,13 +462,13 @@ public class BXYouTubeAuthenticationController
 	// MARK: - RefreshToken
 	
 
-    private var refreshToken: String? = nil
+    private var storedRefreshToken: String? = nil
     {
         didSet
         {
             let identifier = self.keychainIdentifier(for: .refreshToken)
 			
-            if let refreshToken = self.refreshToken
+            if let refreshToken = self.storedRefreshToken
             {
                 if let data = refreshToken.data(using: .utf8)
                 {
@@ -482,7 +482,7 @@ public class BXYouTubeAuthenticationController
         }
     }
     
-    private func loadRefreshToken() -> String?
+    private func _loadRefreshToken() -> String?
     {
         let identifier = self.keychainIdentifier(for: .refreshToken)
         if let data = BXKeychain.data(forKey: identifier),

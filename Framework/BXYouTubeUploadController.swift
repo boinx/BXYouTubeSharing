@@ -251,6 +251,7 @@ public class BXYouTubeUploadController: NSObject
         case fileAccessError
         case userCanceled
         case uploadAlreadyInProgress
+        case accountWithoutChannel // The YouTube API's `youtubeSignupRequired` error, see https://developers.google.com/youtube/create-channel
         case youTubeAPIError(reason: String)
 		case other(underlyingError: Swift.Error?)
 	}
@@ -351,10 +352,21 @@ public class BXYouTubeUploadController: NSObject
                         let errorObj = jsonObj["error"] as? [String: Any],
                         let errorMessage = errorObj["message"] as? String
                 {
-                	#warning("TODO: Handle Unauthorized/youtubeSignupRequired error")
+                    var error: Error = .youTubeAPIError(reason: errorMessage)
+                    
+                    // Check nested error description objects for youtubeSignupRequired error.
+                    if let errorReasonObjs = jsonObj["errors"] as? [[String: Any]],
+                       errorReasonObjs.contains(where: { errorReasonObj in
+                           (errorReasonObj["reason"] as? String) == "youtubeSignupRequired"
+                       })
+                    {
+                        // The user is logged in with an account that has no channel and therefore can't upload video.
+                        // https://developers.google.com/youtube/create-channel describes how to handle such situations.
+                        error = .accountWithoutChannel
+                    }
                 	
                     _self._resetState()
-                    _self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.youTubeAPIError(reason: errorMessage)) }
+                    _self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: error) }
                 }
             }
             else

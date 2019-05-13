@@ -299,7 +299,7 @@ extension BXYouTubeSharingViewController: BXYouTubeAuthenticationControllerDeleg
     }
 }
 
-extension BXYouTubeSharingViewController: BXYouTubeSharingDelegate
+extension BXYouTubeSharingViewController: BXYouTubeUploadControllerDelegate
 {
 	func didStartUpload()
 	{

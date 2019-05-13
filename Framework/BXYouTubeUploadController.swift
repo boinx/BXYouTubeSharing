@@ -25,133 +25,38 @@ public class BXYouTubeUploadController: NSObject
 
 	/// The delegate for UI feedback
 	
-	public weak var delegate:BXYouTubeSharingDelegate? = nil
-	
-	
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: -
-
-	/// An Item specifies the movie file to be uploaded and the metadata that needs to be attached
-	
-	public struct Item : Codable
-	{
-		/// File to upload
-		
-		public var fileURL:URL
-		
-		/// The video title
-		
-		public var title:String = ""
-
-		/// The video description - this should also include any music credits
-		
-		public var description:String = ""
-		
-		/// The category identifier (valid identifiers need to be retrieved from YouTube)
-		
-		public var categoryID:String = ""
-		
-		/// An optional list of tags for the uploaded video
-		
-		public var tags:[String] = []
-		
-		/// The privacy level for the uploaded video
-		
-		public enum PrivacyStatus : String, Codable, CaseIterable
-		{
-			case `private`
-			case `public`
-			case unlisted
-			
-			#warning("TODO: return localized names")
-			
-			public var localizedName : String
-			{
-				return self.rawValue
-			}
-		}
-		
-		public var privacyStatus:PrivacyStatus = .private
-
-		/// Specifies whether YouTube applies automatic color correction to the video
-		
-		public var autoLevels:Bool = false
-		
-		/// Specifies whether YouTube applies motion stabilization to the video
-		
-		public var stabilize:Bool = false
-  
-  
-        fileprivate var uploadReponseData: Data = Data()
-        fileprivate var webURL: URL? = nil
-		
-		/// Creates an Item struct
-		
-		public init(fileURL:URL, title:String = "", description:String = "", categoryID:String = "", tags:[String] = [], privacyStatus:PrivacyStatus = .private, autoLevels:Bool = false, stabilize:Bool = false)
-		{
-			self.fileURL = fileURL
-			self.title = title
-			self.description = description
-			self.categoryID = categoryID
-			self.tags = tags
-			self.privacyStatus = privacyStatus
-			self.autoLevels = autoLevels
-			self.stabilize = stabilize
-		}
-	}
-	
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-	// MARK: -
-	
-	public struct Category
-	{
-		/// The localized name of the category (suitable for displaying in the user interface)
-		
-		public let localizedName:String
-		
-		/// The unique identifier for a category
-		
-		public let identifier:String
-  
-        public let assignable: Bool
-  
-        init(localizedName: String, identifier: String, assignable: Bool)
+	public weak var delegate:BXYouTubeUploadControllerDelegate? = nil
+    {
+        didSet
         {
-            self.localizedName = localizedName
-            self.identifier = identifier
-            self.assignable = assignable
-        }
-  
-        /**
-         Sample dict:
-         
-         {
-            "snippet": {
-                "assignable": true,
-                "channelId": "UCBR8-60-B28hp2BmDPdntcQ",
-                "title": "Film & Animation"
-            },
-            "kind": "youtube#videoCategory",
-            "etag": "\"XpPGQXPnxQJhLgs6enD_n8JR4Qk/Xy1mB4_yLrHy_BmKmPBggty2mZQ\"",
-            "id": "1"
-         }
-        */
-        init?(withResponse dict: [String: Any])
-        {
-            guard let id = dict["id"] as? String,
-                  let snippet = dict["snippet"] as? [String: Any],
-                  let title = snippet["title"] as? String,
-                  let assignable = snippet["assignable"] as? Bool
-            else { return nil }
+            if self.delegate == nil { return }
             
-            self.init(localizedName: title, identifier: id, assignable: assignable)
+            // (Re-)create the background URLSession to receive updates about running upload tasks on the delegate queue.
+            let _ = self.backgroundSession
+            
+            self.backgroundSession.getTasksWithCompletionHandler
+            { (_, uploadTasks, _) in
+                if let uploadTask = uploadTasks.first(where: { $0.taskIdentifier == self.uploadItem?.taskID })
+                {
+                    // TODO: Pass uploadItem to delegate
+                    self.delegate?.onMainThread { $0.didContinueUpload(progress: uploadTask.progress) }
+                }
+            }
         }
-	}
+    }
+	
+    override init()
+    {
+        super.init()
+        
+        self.restoreUploadItem()
+    }
+	
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+	// MARK: -
 	
 	
 	/// Retrieves the list of categories that are known to YouTube. Specify a language code like "en" or "de"
@@ -288,10 +193,34 @@ public class BXYouTubeUploadController: NSObject
 
 
 	private var uploadItem: Item? = nil
+    {
+        didSet
+        {
+            let identifier = BXYouTubeNetworkHelpers.backgroundSessionIdentifier
+            if let uploadItem = self.uploadItem,
+               let data = try? JSONEncoder().encode(uploadItem)
+            {
+                UserDefaults.standard.set(data, forKey: identifier)
+            }
+            else
+            {
+                UserDefaults.standard.removeObject(forKey: identifier)
+            }
+        }
+    }
 	private var uploadURL: URL? = nil
 	private var uploadTask: URLSessionUploadTask? = nil
     private var retryCount = 0
 
+    private func restoreUploadItem()
+    {
+        let identifier = BXYouTubeNetworkHelpers.backgroundSessionIdentifier
+        if let data = UserDefaults.standard.data(forKey: identifier),
+           let uploadItem = try? JSONDecoder().decode(Item.self, from: data)
+        {
+            self.uploadItem = uploadItem
+        }
+    }
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -376,6 +305,7 @@ public class BXYouTubeUploadController: NSObject
                 _self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: nil)) }
             }
         }
+        self.uploadItem?.taskID = creationTask.taskIdentifier
         
         creationTask.resume()
 	}
@@ -522,31 +452,6 @@ extension BXYouTubeUploadController: URLSessionDataDelegate
 extension BXYouTubeUploadController: URLSessionDelegate
 {
     // None of the regular URLSessionDelegate methods are implemented as we don't expect to need them.
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-
-
-// MARK: -
-
-/// The BXYouTubeSharingDelegate notifies the client app of upload progress. All delegate calls are guaranteed
-/// to be called on the main queue.
-
-public protocol BXYouTubeSharingDelegate : BXMainThreadDelegate
-{
-	func willStartUpload()			// Called immediately, can be used to disable UI
-	func didStartUpload()			// Called asynchronously once communication with YouTube is established
-	func didContinueUpload(progress: Progress)
-	func didFinishUpload(url: URL?, error: BXYouTubeUploadController.Error?)
-}
-
-public extension BXYouTubeSharingDelegate
-{
-	func willStartUpload() {}
-	func didStartUpload() {}
-	func didContinueUpload(progress: Progress) {}
-	func didFinishUpload(url: URL?, error: BXYouTubeUploadController.Error?) {}
 }
 
 

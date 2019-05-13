@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		4859564922789F7800F992EF /* BXKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4859564822789F7800F992EF /* BXKeychain.swift */; };
 		489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */; };
+		48A9508B2289F675001F58BF /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A9508A2289F675001F58BF /* AccessToken.swift */; };
+		48A9508D2289F6AC001F58BF /* AccountInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A9508C2289F6AC001F58BF /* AccountInfo.swift */; };
+		48A9508F2289F6D1001F58BF /* BXYouTubeUploadController+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A9508E2289F6D0001F58BF /* BXYouTubeUploadController+Category.swift */; };
+		48A950912289F6F9001F58BF /* BXYouTubeUploadControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A950902289F6F9001F58BF /* BXYouTubeUploadControllerDelegate.swift */; };
+		48A950932289F71C001F58BF /* BXYouTubeAuthenticationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A950922289F71C001F58BF /* BXYouTubeAuthenticationControllerDelegate.swift */; };
+		48A950952289F74E001F58BF /* BXYouTubeUploadController+UplaodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A950942289F74E001F58BF /* BXYouTubeUploadController+UplaodItem.swift */; };
 		48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */; };
 		48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */; };
 		48B96C8D2265972C00E89EF6 /* movie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 48B96C8C2265972C00E89EF6 /* movie.mov */; };
@@ -89,6 +95,12 @@
 /* Begin PBXFileReference section */
 		4859564822789F7800F992EF /* BXKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXKeychain.swift; sourceTree = "<group>"; };
 		489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+backgroundQueue.swift"; sourceTree = "<group>"; };
+		48A9508A2289F675001F58BF /* AccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
+		48A9508C2289F6AC001F58BF /* AccountInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInfo.swift; sourceTree = "<group>"; };
+		48A9508E2289F6D0001F58BF /* BXYouTubeUploadController+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BXYouTubeUploadController+Category.swift"; sourceTree = "<group>"; };
+		48A950902289F6F9001F58BF /* BXYouTubeUploadControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeUploadControllerDelegate.swift; sourceTree = "<group>"; };
+		48A950922289F71C001F58BF /* BXYouTubeAuthenticationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeAuthenticationControllerDelegate.swift; sourceTree = "<group>"; };
+		48A950942289F74E001F58BF /* BXYouTubeUploadController+UplaodItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BXYouTubeUploadController+UplaodItem.swift"; sourceTree = "<group>"; };
 		48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeNetworkHelpers.swift; sourceTree = "<group>"; };
 		48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+fileSize.swift"; sourceTree = "<group>"; };
 		48B96C8C2265972C00E89EF6 /* movie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = movie.mov; path = ../../../Desktop/movie.mov; sourceTree = "<group>"; };
@@ -156,6 +168,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		48A950882289F63F001F58BF /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */,
+				48A950922289F71C001F58BF /* BXYouTubeAuthenticationControllerDelegate.swift */,
+				48A9508A2289F675001F58BF /* AccessToken.swift */,
+				48A9508C2289F6AC001F58BF /* AccountInfo.swift */,
+			);
+			name = Authentication;
+			sourceTree = "<group>";
+		};
+		48A950892289F648001F58BF /* Upload */ = {
+			isa = PBXGroup;
+			children = (
+				D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */,
+				48A9508E2289F6D0001F58BF /* BXYouTubeUploadController+Category.swift */,
+				48A950942289F74E001F58BF /* BXYouTubeUploadController+UplaodItem.swift */,
+				48A950902289F6F9001F58BF /* BXYouTubeUploadControllerDelegate.swift */,
+			);
+			name = Upload;
+			sourceTree = "<group>";
+		};
 		48B96C8B2260E22700E89EF6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -211,8 +245,8 @@
 			children = (
 				D05AB1A7225F49AA00205C7F /* Info.plist */,
 				D05AB1A6225F49AA00205C7F /* BXYouTubeSharing_Framework.h */,
-				D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */,
-				D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */,
+				48A950892289F648001F58BF /* Upload */,
+				48A950882289F63F001F58BF /* Authentication */,
 				48B96C8B2260E22700E89EF6 /* Helpers */,
 			);
 			path = Framework;
@@ -436,13 +470,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48A950932289F71C001F58BF /* BXYouTubeAuthenticationControllerDelegate.swift in Sources */,
 				48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */,
+				48A950952289F74E001F58BF /* BXYouTubeUploadController+UplaodItem.swift in Sources */,
+				48A9508F2289F6D1001F58BF /* BXYouTubeUploadController+Category.swift in Sources */,
 				4859564922789F7800F992EF /* BXKeychain.swift in Sources */,
+				48A950912289F6F9001F58BF /* BXYouTubeUploadControllerDelegate.swift in Sources */,
 				48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */,
 				D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */,
 				D05AB1C9225F837C00205C7F /* BXYouTubeUploadController.swift in Sources */,
 				D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */,
 				489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */,
+				48A9508B2289F675001F58BF /* AccessToken.swift in Sources */,
+				48A9508D2289F6AC001F58BF /* AccountInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

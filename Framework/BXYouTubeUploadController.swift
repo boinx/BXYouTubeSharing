@@ -302,8 +302,9 @@ public class BXYouTubeUploadController: NSObject
 	
 	public func upload(_ item:Item, notifySubscribers:Bool = true) throws
 	{
- 		#warning("FIXME: uploadItem can be modified from the background queue")
-
+ 		// NOTE: uploadItem can and will be modified from the background queue. If code related to that property behaves
+        // strangely, maybe always use self.queue when accessing uploaditem.
+        
         guard self.uploadItem == nil else
         {
             throw Error.uploadAlreadyInProgress
@@ -454,10 +455,13 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Swift.Error?)
     {
-        // TODO: Map URLSession Error to our own Error type
-		
-		if let statusCode = (task.response as? HTTPURLResponse)?.statusCode,
-			statusCode == 500 || statusCode == 502 || statusCode == 503 || statusCode == 504
+		if let error = error
+        {
+            self._resetState()
+            self.delegate?.onMainThread { $0.didFinishUpload(url: nil, error: Error.other(underlyingError: error)) }
+        }
+		else if let statusCode = (task.response as? HTTPURLResponse)?.statusCode,
+			    statusCode == 500 || statusCode == 502 || statusCode == 503 || statusCode == 504
 		{
 			// If we failed to start the upload, then retry a limited number of times,
 			// each time backing off a little bit longer

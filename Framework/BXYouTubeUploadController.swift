@@ -322,9 +322,7 @@ public class BXYouTubeUploadController: NSObject
 		
         self.delegate?.onMainThread { $0.willStartUpload() }
 
- 		#warning("TODO: Pass through notifySubscribers option")
-
-        let videoCreationRequest = BXYouTubeNetworkHelpers.videoCreationRequest(for: item, ofSize: fileSize, accessToken: accessToken)
+        let videoCreationRequest = BXYouTubeNetworkHelpers.videoCreationRequest(for: item, ofSize: fileSize, accessToken: accessToken, notifySubscribers: notifySubscribers)
   
         let creationTask = self.foregroundSession.dataTask(with: videoCreationRequest)
         {

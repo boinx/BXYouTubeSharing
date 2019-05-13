@@ -106,13 +106,15 @@ internal class BXYouTubeNetworkHelpers
     
     // MARK: - Video Uploading
     
-    static func videoCreationRequest(for item: BXYouTubeUploadController.Item, ofSize fileSize: Int, accessToken: String) -> URLRequest
+    static func videoCreationRequest(for item: BXYouTubeUploadController.Item, ofSize fileSize: Int, accessToken: String, notifySubscribers: Bool) -> URLRequest
     {
         var urlComponents = URLComponents(string: "https://www.googleapis.com/upload/youtube/v3/videos")!
         
         urlComponents.queryItems = [
             URLQueryItem(name: "part", value: "snippet,status"),
-            URLQueryItem(name: "uploadType", value: "resumable")
+            URLQueryItem(name: "uploadType", value: "resumable"),
+            // Using capitalized boolean values as described on https://developers.google.com/youtube/v3/docs/videos/insert
+            URLQueryItem(name: "notifySubscribers", value: notifySubscribers ? "True" : "False")
         ]
         
         var request = URLRequest(url: urlComponents.url!)

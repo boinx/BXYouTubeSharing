@@ -1,5 +1,5 @@
 //
-//  UplaodItem.swift
+//  UploadItem.swift
 //  BXYouTubeSharing-Framework
 //
 //  Created by Stefan Fochler on 13.05.19.

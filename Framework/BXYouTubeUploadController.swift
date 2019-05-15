@@ -191,7 +191,6 @@ public class BXYouTubeUploadController: NSObject
         }
     }
 	private var uploadURL: URL? = nil
-	//private var uploadTask: URLSessionUploadTask? = nil
     private var retryCount = 0
 
     private func restoreUploadItem()
@@ -325,7 +324,6 @@ public class BXYouTubeUploadController: NSObject
         assert(OperationQueue.current == self.queue, "BXYouTubeUploadController.\(#function) may only be called on self.queue")
  
         self.lastUploadStatus = nil
-        //self.uploadTask = nil
  
 		guard let accessToken = self.accessToken else { return }
 		guard let item = self.uploadItem else { return }
@@ -338,11 +336,6 @@ public class BXYouTubeUploadController: NSObject
             let uploadRequest = BXYouTubeNetworkHelpers.videoUploadRequest(for: item, ofSize: fileSize, location: uploadURL, accessToken: accessToken)
             let uploadTask = self.backgroundSession.uploadTask(with: uploadRequest, fromFile: item.fileURL)
             uploadTask.resume()
-            
-            self.queue.addOperation
-            {
-                //self.uploadTask = uploadTask
-            }
         }
 	}
  
@@ -353,22 +346,20 @@ public class BXYouTubeUploadController: NSObject
         self.retryCount = 0
         self.uploadItem = nil
         self.uploadURL = nil
-        //self.uploadTask = nil
     }
     
     public enum UploadStatus
     {
-        case none
-        case failed(uploadItem: Item, error: Error)
-        case completed(uploadItem: Item, url: URL)
         case progress(uploadItem: Item, progress: Progress)
+        case completed(uploadItem: Item, url: URL)
+        case failed(uploadItem: Item, error: Error)
     }
     
     private var lastUploadStatus: UploadStatus? = nil
     
-    private var uploadStatusCompletionhandlers: [(UploadStatus) -> Void] = []
+    private var uploadStatusCompletionhandlers: [(UploadStatus?) -> Void] = []
     
-    public func checkUploadStatus(completionHandler: @escaping (UploadStatus) -> Void)
+    public func checkUploadStatus(completionHandler: @escaping (UploadStatus?) -> Void)
     {
         self.queue.addOperation
         {
@@ -390,7 +381,7 @@ public class BXYouTubeUploadController: NSObject
             {
                 DispatchQueue.main.async
                 {
-                    completionHandler(.none)
+                    completionHandler(nil)
                 }
                 return
             }
@@ -526,8 +517,7 @@ extension BXYouTubeUploadController: URLSessionDelegate
     {
         // Method is called on self.queue.
         
-        // TODO: What if there is no lastUplaodStatus by now?
-        let uploadStatus = self.lastUploadStatus ?? .none
+        let uploadStatus = self.lastUploadStatus
         
         let completionHandlers = self.uploadStatusCompletionhandlers
         self.uploadStatusCompletionhandlers = []

@@ -31,15 +31,15 @@ class BXYouTubeSharingAppDelegate: UIResponder, UIApplicationDelegate
             case .none:
                 break
                 
-            case .failed(let uploadItem, let error):
+            case .failed(let uploadItem, let error)?:
                 // Alert with error reason
                 break
             
-            case .completed(let uploadItem, let url):
+            case .completed(let uploadItem, let url)?:
                 // Alert with open URL in browser button
                 break
                 
-            case .progress(let uploadItem, let progress):
+            case .progress(let uploadItem, let progress)?:
                 // Modal upload progress
                 break
             }
@@ -106,15 +106,15 @@ class BXYouTubeSharingAppDelegate: UIResponder, UIApplicationDelegate
             case .none:
                 break
             
-            case .failed(let uploadItem, let error):
+            case .failed(let uploadItem, let error)?:
                 // Local notification
                 break
             
-            case .completed(let uploadItem, let url):
+            case .completed(let uploadItem, let url)?:
                 // Local notification
                 break
             
-            case .progress(let uploadItem, let progress):
+            case .progress(let uploadItem, let progress)?:
                 // Ignore progress event (shouldn't happen anyway in handleEventsForBackgroundURLSession)
                 break
             }

@@ -22,13 +22,11 @@ import UIKit
 
 public class BXYouTubeAuthenticationController
 {
-	/// Creates a new instance of this controller with the specified clientID/clientSecret uniquely identifying
-	/// the host application.
+	/// Creates a new instance of this controller with the specified clientID uniquely identifying the host application.
 	
-	public init(clientID: String, clientSecret: String, redirectURI: String)
+	public init(clientID: String, redirectURI: String)
 	{
 		self.clientID = clientID
-		self.clientSecret = clientSecret
         self.redirectURI = redirectURI
   
         self.storedRefreshToken = self._loadRefreshToken()
@@ -36,7 +34,7 @@ public class BXYouTubeAuthenticationController
 	}
  
  	/// Convenience singleton instance of this controller. It is not instantiated automatically, because
-	/// its init() needs the clientID and clientSecret arguments, thich are unique to the host app.
+	/// its init() needs the clientID and redirectURI arguments, thich are unique to the host app.
 	
 	public static var shared: BXYouTubeAuthenticationController? = nil
 	
@@ -63,7 +61,6 @@ public class BXYouTubeAuthenticationController
 
 
 	private let clientID: String
-	private let clientSecret: String
     private let redirectURI: String
     
     private lazy var foregroundSession: URLSession =

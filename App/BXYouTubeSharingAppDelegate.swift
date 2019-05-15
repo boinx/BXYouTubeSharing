@@ -52,7 +52,7 @@ class BXYouTubeSharingAppDelegate: UIResponder, UIApplicationDelegate
         let clientID = "70625101626-ip65lgpfgofvmuhdesmkafoosnosuura.apps.googleusercontent.com"
         let redirectURI = "com.googleusercontent.apps.70625101626-ip65lgpfgofvmuhdesmkafoosnosuura:/BXYouTubeSharing"
 
-        BXYouTubeAuthenticationController.shared = BXYouTubeAuthenticationController(clientID: clientID, clientSecret: "", redirectURI: redirectURI)
+        BXYouTubeAuthenticationController.shared = BXYouTubeAuthenticationController(clientID: clientID, redirectURI: redirectURI)
         
         return true
     }

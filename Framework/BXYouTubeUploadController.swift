@@ -178,24 +178,29 @@ public class BXYouTubeUploadController: NSObject
     {
         didSet
         {
-            let identifier = BXYouTubeNetworkHelpers.backgroundSessionIdentifier
-            if let uploadItem = self.uploadItem,
-               let data = try? JSONEncoder().encode(uploadItem)
-            {
-                UserDefaults.standard.set(data, forKey: identifier)
-            }
-            else
-            {
-                UserDefaults.standard.removeObject(forKey: identifier)
-            }
+            self.storeUploadItem()
         }
     }
 	private var uploadURL: URL? = nil
     private var retryCount = 0
+    
+    private func storeUploadItem()
+    {
+        let identifier = BXYouTubeNetworkHelpers.backgroundSessionIdentifier.replacingOccurrences(of: ".", with: "_")
+        if let uploadItem = self.uploadItem,
+           let data = try? JSONEncoder().encode(uploadItem)
+        {
+            UserDefaults.standard.set(data, forKey: identifier)
+        }
+        else
+        {
+            UserDefaults.standard.removeObject(forKey: identifier)
+        }
+    }
 
     private func restoreUploadItem()
     {
-        let identifier = BXYouTubeNetworkHelpers.backgroundSessionIdentifier
+        let identifier = BXYouTubeNetworkHelpers.backgroundSessionIdentifier.replacingOccurrences(of: ".", with: "_")
         if let data = UserDefaults.standard.data(forKey: identifier),
            let uploadItem = try? JSONDecoder().decode(Item.self, from: data)
         {
@@ -287,6 +292,7 @@ public class BXYouTubeUploadController: NSObject
             }
         }
         self.uploadItem?.taskID = creationTask.taskIdentifier
+        self.storeUploadItem()
         
         creationTask.resume()
 	}
@@ -335,6 +341,14 @@ public class BXYouTubeUploadController: NSObject
         {
             let uploadRequest = BXYouTubeNetworkHelpers.videoUploadRequest(for: item, ofSize: fileSize, location: uploadURL, accessToken: accessToken)
             let uploadTask = self.backgroundSession.uploadTask(with: uploadRequest, fromFile: item.fileURL)
+            
+            self.queue.addOperation
+            {
+                self.uploadItem?.taskID = uploadTask.taskIdentifier
+                self.storeUploadItem()
+            }
+            self.queue.waitUntilAllOperationsAreFinished()
+            
             uploadTask.resume()
         }
 	}
@@ -343,9 +357,14 @@ public class BXYouTubeUploadController: NSObject
     {
         assert(OperationQueue.current == self.queue, "BXYouTubeUploadController.\(#function) may only be called on self.queue")
         
+        NSLog("RESET UPLOAD STATE")
+        
         self.retryCount = 0
         self.uploadItem = nil
         self.uploadURL = nil
+        
+        // NOTE: _resetState does not clear lastUplaodStatus, because it should be avaialble to consumers even after
+        // the volatile upload state used during the upload has been cleared.
     }
     
     public enum UploadStatus
@@ -356,11 +375,38 @@ public class BXYouTubeUploadController: NSObject
     }
     
     private var lastUploadStatus: UploadStatus? = nil
+    {
+        didSet
+        {
+            NSLog("Did set lastUploadStatus to \(String(describing: self.lastUploadStatus))")
+        }
+    }
     
     private var uploadStatusCompletionhandlers: [(UploadStatus?) -> Void] = []
+    private var notifyUploadStatusCompletionHandlersAfterFirstProgressEvent = false
     
-    public func checkUploadStatus(completionHandler: @escaping (UploadStatus?) -> Void)
+    private func _notifyUploadStatusCompletionHandlers()
     {
+        assert(OperationQueue.current == self.queue, "BXYouTubeUploadController.\(#function) may only be called on self.queue")
+        
+        let uploadStatus = self.lastUploadStatus
+        
+        NSLog("Notify completion handlers with status \(uploadStatus)")
+        
+        let completionHandlers = self.uploadStatusCompletionhandlers
+        self.uploadStatusCompletionhandlers = []
+        
+        DispatchQueue.main.async
+        {
+            completionHandlers.forEach { $0(uploadStatus) }
+        }
+        
+        self.notifyUploadStatusCompletionHandlersAfterFirstProgressEvent = false
+    }
+    
+    public func checkUploadStatus(completionHandler: ((UploadStatus?) -> Void)? = nil)
+    {
+        NSLog("Start check upload status")
         self.queue.addOperation
         {
             // If the uploadStatus has already been determined, we won't receive any events for that upload anymore and
@@ -368,30 +414,51 @@ public class BXYouTubeUploadController: NSObject
             // Note: `lastUploadStatus` must be cleared once a new upload begins, or a old value will be reported here!
             if let uploadStatus = self.lastUploadStatus
             {
+                NSLog("Has cached upload status, deliver it.")
                 DispatchQueue.main.async
                 {
-                    completionHandler(uploadStatus)
+                    completionHandler?(uploadStatus)
                 }
                 return
             }
             
             // If there is no upload in process, there is no use in creating the url session and waiting for delegate
             // events.
-            if self.uploadItem == nil
+            guard let uploadItem = self.uploadItem else
             {
+                NSLog("Has no upload item")
                 DispatchQueue.main.async
                 {
-                    completionHandler(nil)
+                    completionHandler?(nil)
                 }
                 return
             }
             
+            NSLog("Store completion handler for later")
+            
             // In all other cases, remember the completion handler and call it once all events have been flushed. The
             // completion handlers will be called and cleared in `urlSessionDidFinishEvents`.
-            self.uploadStatusCompletionhandlers.append(completionHandler)
+            if let completionHandler = completionHandler
+            {
+                self.uploadStatusCompletionhandlers.append(completionHandler)
+            }
             
             // (Re-)create the background URLSession to receive updates about running upload tasks on the delegate queue.
-            let _ = self.backgroundSession
+            let session = self.backgroundSession
+            
+            // If the upload's task is still in progress, completion handlers must be called immediately because no
+            // events will be replayed and thus didFinishEvents will not be called.
+            session.getTasksWithCompletionHandler(
+            {
+                (_, uploadTasks, _) in
+                
+                if let currentUploadTasks = uploadTasks.first(where: { $0.taskIdentifier == uploadItem.taskID }),
+                   currentUploadTasks.state == .running
+                {
+                    self.lastUploadStatus = .progress(uploadItem: uploadItem, progress: currentUploadTasks.progress)
+                    self._notifyUploadStatusCompletionHandlers()
+                }
+            })
         }
     }
     
@@ -411,6 +478,8 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
     {
         // Method is called on self.queue.
         
+        NSLog("Urlsession session:task:didSendBodyData: \(totalBytesSent) of \(totalBytesExpectedToSend)")
+        
         if let uploadItem = self.uploadItem,
            uploadItem.taskID == task.taskIdentifier
         {
@@ -423,6 +492,8 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Swift.Error?)
     {
         // Method is called on self.queue.
+        
+        NSLog("UploadController: session:task:didCompleteWithError: \(String(describing: error))")
         
 		if let error = error
         {
@@ -442,11 +513,15 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 		{
 			// If we failed to start the upload, then retry a limited number of times,
 			// each time backing off a little bit longer
+   
+            NSLog("Upload has failed")
 			
 			if self.retryCount < 5 && self.uploadItem != nil
 			{
 				let delay = pow(2,Double(retryCount))
 				self.retryCount += 1
+    
+                NSLog("Retry upload later")
 
 				DispatchQueue.main.asyncAfter(deadline:.now()+delay)
 				{
@@ -463,6 +538,8 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			
 			else
 			{
+                NSLog("Giving up, too many retries")
+                
                 let error = Error.youTubeAPIError(reason:"Too many retries!")
                 
                 if let uploadItem = self.uploadItem,
@@ -485,8 +562,11 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
                let jsonResponse = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any],
                let videoId = jsonResponse["id"] as? String
             {
+                NSLog("Extracted video ID \(videoId) from payload")
                 url = URL(string: "https://www.youtube.com/watch?v=\(videoId)")
             }
+            
+            NSLog("Upload was fine. UploadItem: \(String(describing: self.uploadItem)), stored taskID: \(String(describing: self.uploadItem?.taskID)), completed taskID: \(task.taskIdentifier)")
             
             if let uploadItem = self.uploadItem,
                uploadItem.taskID == task.taskIdentifier,
@@ -506,7 +586,10 @@ extension BXYouTubeUploadController: URLSessionDataDelegate
 {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data)
     {
+        NSLog("didReceiveData")
         self.uploadItem?.uploadReponseData.append(data)
+        
+        self.storeUploadItem()
     }
 }
 
@@ -517,15 +600,7 @@ extension BXYouTubeUploadController: URLSessionDelegate
     {
         // Method is called on self.queue.
         
-        let uploadStatus = self.lastUploadStatus
-        
-        let completionHandlers = self.uploadStatusCompletionhandlers
-        self.uploadStatusCompletionhandlers = []
-        
-        DispatchQueue.main.async
-        {
-            completionHandlers.forEach { $0(uploadStatus) }
-        }
+        self._notifyUploadStatusCompletionHandlers()
     }
 }
 

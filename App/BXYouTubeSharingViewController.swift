@@ -243,7 +243,12 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
         }
 		
 	}
- 
+    
+    @IBAction func exitPressed(_ sender: Any)
+    {
+        exit(0)
+    }
+    
     private var loginAlert: UIAlertController?
 }
 
@@ -311,7 +316,7 @@ extension BXYouTubeSharingViewController: BXYouTubeUploadControllerDelegate
         self.progressView.observedProgress = progress
     }
 	
-	func didFinishUpload(url: URL?, error:Error?)
+	func didFinishUpload(url: URL?, error: BXYouTubeUploadController.Error?)
 	{
         self.progressView.observedProgress = nil
         

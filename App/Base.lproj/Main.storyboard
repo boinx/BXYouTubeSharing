@@ -18,11 +18,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B94-Lk-InJ">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="B94-Lk-InJ">
                                 <rect key="frame" x="0.0" y="0.0" width="834" height="1194"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="5tT-qy-gsz">
-                                        <rect key="frame" x="20" y="0.0" width="794" height="1149.5"/>
+                                        <rect key="frame" x="20" y="0.0" width="794" height="1229"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-w7-ly2">
                                                 <rect key="frame" x="0.0" y="0.0" width="794" height="5"/>
@@ -126,7 +126,7 @@
                                                 <rect key="frame" x="0.0" y="206.5" width="794" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                 <attributedString key="userComments">
                                                     <fragment content="DNL"/>
                                                 </attributedString>
@@ -235,8 +235,40 @@
                                                     <action selector="share:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0iN-pn-PMh"/>
                                                 </connections>
                                             </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Debugging" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F9M-4o-kdY">
+                                                <rect key="frame" x="0.0" y="1144.5" width="794" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o4I-7p-KHm">
+                                                <rect key="frame" x="0.0" y="1174" width="794" height="35"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ImN-V6-B68">
+                                                        <rect key="frame" x="0.0" y="1" width="30" height="33"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <state key="normal" title="Exit"/>
+                                                        <attributedString key="userComments">
+                                                            <fragment content="DNL"/>
+                                                        </attributedString>
+                                                        <connections>
+                                                            <action selector="exitPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cdH-GP-Xrv"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="ImN-V6-B68" firstAttribute="leading" secondItem="o4I-7p-KHm" secondAttribute="leading" id="TWD-FQ-r9Z"/>
+                                                    <constraint firstAttribute="height" constant="35" id="gWM-QH-4Wd"/>
+                                                    <constraint firstItem="ImN-V6-B68" firstAttribute="centerY" secondItem="o4I-7p-KHm" secondAttribute="centerY" id="kzz-GC-1E8"/>
+                                                </constraints>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DNL"/>
+                                                </attributedString>
+                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d4f-g0-BUR">
-                                                <rect key="frame" x="0.0" y="1144.5" width="794" height="5"/>
+                                                <rect key="frame" x="0.0" y="1224" width="794" height="5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="5" id="rGX-gT-1SA"/>
                                                 </constraints>

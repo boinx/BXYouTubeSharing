@@ -391,7 +391,7 @@ public class BXYouTubeUploadController: NSObject
         
         let uploadStatus = self.lastUploadStatus
         
-        NSLog("Notify completion handlers with status \(uploadStatus)")
+		NSLog("Notify completion handlers with status \(String(describing:uploadStatus))")
         
         let completionHandlers = self.uploadStatusCompletionhandlers
         self.uploadStatusCompletionhandlers = []

@@ -42,11 +42,14 @@ extension BXYouTubeUploadController
             case `public`
             case unlisted
             
-            #warning("TODO: return localized names")
-            
             public var localizedName : String
             {
-                return self.rawValue
+            	switch self
+            	{
+					case .`private`: return NSLocalizedString("private", bundle:Bundle.BXYouTubeSharing, value:"private", comment:"PrivacyStatus name")
+ 					case .`public`:	 return NSLocalizedString("public", bundle:Bundle.BXYouTubeSharing, value:"public", comment:"PrivacyStatus name")
+ 					case .unlisted:	 return NSLocalizedString("unlisted", bundle:Bundle.BXYouTubeSharing, value:"unlisted", comment:"PrivacyStatus name")
+          		}
             }
         }
         

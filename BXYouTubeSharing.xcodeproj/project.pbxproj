@@ -34,6 +34,8 @@
 		D05AB1D9225F913700205C7F /* BXYouTubeSharing-Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D05AB1CF225F913700205C7F /* BXYouTubeSharing-Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */; };
 		D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */; };
+		D0A95D30228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A95D2F228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift */; };
+		D0A95D33228EAA7700256A36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0A95D35228EAA7700256A36 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +134,10 @@
 		D0987D59226EEA3D00BCF772 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D0987D5A226EEA4000BCF772 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXMainThreadDelegate.swift; sourceTree = "<group>"; };
+		D0A95D2F228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+BXYouTubeSharing.swift"; sourceTree = "<group>"; };
+		D0A95D34228EAA7700256A36 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D0A95D36228EAA7900256A36 /* de */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D0A95D37228EAA7A00256A36 /* fr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +204,8 @@
 				48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */,
 				489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */,
 				4859564822789F7800F992EF /* BXKeychain.swift */,
+				D0A95D2F228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift */,
+				D0A95D35228EAA7700256A36 /* Localizable.strings */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -436,6 +444,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0A95D33228EAA7700256A36 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +487,7 @@
 				48A950912289F6F9001F58BF /* BXYouTubeUploadControllerDelegate.swift in Sources */,
 				48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */,
 				D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */,
+				D0A95D30228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift in Sources */,
 				D05AB1C9225F837C00205C7F /* BXYouTubeUploadController.swift in Sources */,
 				D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */,
 				489214D32272060C00D05999 /* DispatchQueue+backgroundQueue.swift in Sources */,
@@ -556,6 +566,16 @@
 				D05AB1D4225F913700205C7F /* Base */,
 			);
 			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		D0A95D35228EAA7700256A36 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0A95D34228EAA7700256A36 /* en */,
+				D0A95D36228EAA7900256A36 /* de */,
+				D0A95D37228EAA7A00256A36 /* fr */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

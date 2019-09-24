@@ -357,7 +357,7 @@ public class BXYouTubeUploadController: NSObject
     {
         assert(OperationQueue.current == self.queue, "BXYouTubeUploadController.\(#function) may only be called on self.queue")
         
-        NSLog("RESET UPLOAD STATE")
+//        NSLog("RESET UPLOAD STATE")
         
         self.retryCount = 0
         self.uploadItem = nil
@@ -378,7 +378,7 @@ public class BXYouTubeUploadController: NSObject
     {
         didSet
         {
-            NSLog("Did set lastUploadStatus to \(String(describing: self.lastUploadStatus))")
+//            NSLog("Did set lastUploadStatus to \(String(describing: self.lastUploadStatus))")
         }
     }
     
@@ -391,7 +391,7 @@ public class BXYouTubeUploadController: NSObject
         
         let uploadStatus = self.lastUploadStatus
         
-		NSLog("Notify completion handlers with status \(String(describing:uploadStatus))")
+//		NSLog("Notify completion handlers with status \(String(describing:uploadStatus))")
         
         let completionHandlers = self.uploadStatusCompletionhandlers
         self.uploadStatusCompletionhandlers = []
@@ -406,7 +406,7 @@ public class BXYouTubeUploadController: NSObject
     
     public func checkUploadStatus(completionHandler: ((UploadStatus?) -> Void)? = nil)
     {
-        NSLog("Start check upload status")
+//        NSLog("Start check upload status")
         self.queue.addOperation
         {
             // If the uploadStatus has already been determined, we won't receive any events for that upload anymore and
@@ -414,7 +414,7 @@ public class BXYouTubeUploadController: NSObject
             // Note: `lastUploadStatus` must be cleared once a new upload begins, or a old value will be reported here!
             if let uploadStatus = self.lastUploadStatus
             {
-                NSLog("Has cached upload status, deliver it.")
+//                NSLog("Has cached upload status, deliver it.")
                 DispatchQueue.main.async
                 {
                     completionHandler?(uploadStatus)
@@ -426,7 +426,7 @@ public class BXYouTubeUploadController: NSObject
             // events.
             guard let uploadItem = self.uploadItem else
             {
-                NSLog("Has no upload item")
+//                NSLog("Has no upload item")
                 DispatchQueue.main.async
                 {
                     completionHandler?(nil)
@@ -434,7 +434,7 @@ public class BXYouTubeUploadController: NSObject
                 return
             }
             
-            NSLog("Store completion handler for later")
+//            NSLog("Store completion handler for later")
             
             // In all other cases, remember the completion handler and call it once all events have been flushed. The
             // completion handlers will be called and cleared in `urlSessionDidFinishEvents`.
@@ -478,7 +478,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
     {
         // Method is called on self.queue.
         
-        NSLog("Urlsession session:task:didSendBodyData: \(totalBytesSent) of \(totalBytesExpectedToSend)")
+//        NSLog("Urlsession session:task:didSendBodyData: \(totalBytesSent) of \(totalBytesExpectedToSend)")
         
         if let uploadItem = self.uploadItem,
            uploadItem.taskID == task.taskIdentifier
@@ -493,7 +493,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
     {
         // Method is called on self.queue.
         
-        NSLog("UploadController: session:task:didCompleteWithError: \(String(describing: error))")
+//        NSLog("UploadController: session:task:didCompleteWithError: \(String(describing: error))")
         
 		if let error = error
         {
@@ -514,14 +514,14 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			// If we failed to start the upload, then retry a limited number of times,
 			// each time backing off a little bit longer
    
-            NSLog("Upload has failed")
+//            NSLog("Upload has failed")
 			
 			if self.retryCount < 5 && self.uploadItem != nil
 			{
 				let delay = pow(2,Double(retryCount))
 				self.retryCount += 1
     
-                NSLog("Retry upload later")
+//                NSLog("Retry upload later")
 
 				DispatchQueue.main.asyncAfter(deadline:.now()+delay)
 				{
@@ -538,7 +538,7 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
 			
 			else
 			{
-                NSLog("Giving up, too many retries")
+//                NSLog("Giving up, too many retries")
                 
                 let error = Error.youTubeAPIError(reason:"Too many retries!")
                 
@@ -586,7 +586,7 @@ extension BXYouTubeUploadController: URLSessionDataDelegate
 {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data)
     {
-        NSLog("didReceiveData")
+//        NSLog("didReceiveData")
         self.uploadItem?.uploadReponseData.append(data)
         
         self.storeUploadItem()

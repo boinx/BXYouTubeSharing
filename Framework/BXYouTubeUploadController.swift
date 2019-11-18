@@ -369,7 +369,7 @@ public class BXYouTubeUploadController: NSObject
     
     public enum UploadStatus
     {
-        case progress(uploadItem: Item, progress: Progress)
+        case progress(uploadItem: Item, progress: Float)
         case completed(uploadItem: Item, url: URL)
         case failed(uploadItem: Item, error: Error)
     }
@@ -452,10 +452,11 @@ public class BXYouTubeUploadController: NSObject
             {
                 (_, uploadTasks, _) in
                 
-                if let currentUploadTasks = uploadTasks.first(where: { $0.taskIdentifier == uploadItem.taskID }),
-                   currentUploadTasks.state == .running
+                if let currentUploadTask = uploadTasks.first(where: { $0.taskIdentifier == uploadItem.taskID }),
+                   currentUploadTask.state == .running
                 {
-                    self.lastUploadStatus = .progress(uploadItem: uploadItem, progress: currentUploadTasks.progress)
+					let fraction = Float(currentUploadTask.progress.fractionCompleted)
+                    self.lastUploadStatus = .progress(uploadItem: uploadItem, progress:fraction)
                     self._notifyUploadStatusCompletionHandlers()
                 }
             })
@@ -480,13 +481,15 @@ extension BXYouTubeUploadController: URLSessionTaskDelegate
         
 //        NSLog("Urlsession session:task:didSendBodyData: \(totalBytesSent) of \(totalBytesExpectedToSend)")
         
-        if let uploadItem = self.uploadItem,
+		let fraction = Float(totalBytesSent) / Float(totalBytesExpectedToSend)
+		
+		if let uploadItem = self.uploadItem,
            uploadItem.taskID == task.taskIdentifier
         {
-            self.lastUploadStatus = .progress(uploadItem: uploadItem, progress: task.progress)
+            self.lastUploadStatus = .progress(uploadItem: uploadItem, progress:fraction)
         }
         
-        self.delegate?.onMainThread { $0.didContinueUpload(progress: task.progress) }
+        self.delegate?.onMainThread { $0.didContinueUpload(progress:fraction) }
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Swift.Error?)

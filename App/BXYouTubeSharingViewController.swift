@@ -311,14 +311,14 @@ extension BXYouTubeSharingViewController: BXYouTubeUploadControllerDelegate
         print("Did Start upload")
 	}
  
-    func didContinueUpload(progress: Progress)
+    func didContinueUpload(progress: Float)
     {
-        self.progressView.observedProgress = progress
+        self.progressView.progress = progress
     }
 	
 	func didFinishUpload(url: URL?, error: BXYouTubeUploadController.Error?)
 	{
-        self.progressView.observedProgress = nil
+        self.progressView.progress = 1.0
         
         print("Did finish upload, url: \(url?.absoluteString ?? "(none)")")
         

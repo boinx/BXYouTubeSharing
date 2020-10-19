@@ -597,6 +597,8 @@ extension BXYouTubeUploadController: URLSessionDataDelegate
 }
 
 
+#if os(iOS)
+
 extension BXYouTubeUploadController: URLSessionDelegate
 {
     public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession)
@@ -606,6 +608,8 @@ extension BXYouTubeUploadController: URLSessionDelegate
         self._notifyUploadStatusCompletionHandlers()
     }
 }
+
+#endif
 
 
 //----------------------------------------------------------------------------------------------------------------------

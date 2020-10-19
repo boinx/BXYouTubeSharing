@@ -218,6 +218,8 @@ public class BXYouTubeAuthenticationController
 	
 	private func _whenInForeground(start task:URLSessionDataTask, delay:Double = 0.1, maxRetryCount:Int = 100)
 	{
+		#if os(iOS)
+		
 		if UIApplication.shared.applicationState == .active || maxRetryCount == 0
 		{
 			task.resume()
@@ -229,6 +231,8 @@ public class BXYouTubeAuthenticationController
 				self._whenInForeground(start: task, maxRetryCount: maxRetryCount-1)
 			}
 		}
+		
+		#endif
 	}
 	
     private var authenticationURL: URL?

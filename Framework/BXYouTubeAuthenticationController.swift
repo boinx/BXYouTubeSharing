@@ -193,7 +193,13 @@ public class BXYouTubeAuthenticationController
             {
                 let (accessToken, refreshToken, error) = self._extractValues(from: data)
 				
-                if let accessToken = accessToken,
+                if let error = error
+                {
+                    // YouTube API Error
+                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
+                    return
+                }
+				else if let accessToken = accessToken,
                    let refreshToken = refreshToken
                 {
                     // Valid Data
@@ -201,12 +207,6 @@ public class BXYouTubeAuthenticationController
                     self.storedRefreshToken = refreshToken
 					
                     self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: nil) }
-                    return
-                }
-                else if let error = error
-                {
-                    // YouTube API Error
-                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
                     return
                 }
             }

@@ -149,14 +149,22 @@ public class BXYouTubeAuthenticationController
 		
         if let scope = urlComponents.queryItems?.first(where: { $0.name == "scope" })?.value
         {
-            // Validate scope only if present.
-            let scopeSet = Set(scope.components(separatedBy: " "))
+			var isScopeValid = true
 			
-            if BXYouTubeAuthenticationController.scope != scopeSet
-            {
+			for part in BXYouTubeAuthenticationController.scope
+			{
+				if !scope.contains(part)
+				{
+					isScopeValid = false
+					break
+				}
+			}
+			
+			if !isScopeValid
+			{
                 self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "insufficient permission")) }
                 return true
-            }
+			}
         }
 		
         if let error = urlComponents.queryItems?.first(where: { $0.name == "error" })?.value

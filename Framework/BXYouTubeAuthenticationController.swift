@@ -24,9 +24,10 @@ public class BXYouTubeAuthenticationController
 {
 	/// Creates a new instance of this controller with the specified clientID uniquely identifying the host application.
 	
-	public init(clientID: String, redirectURI: String)
+	public init(clientID: String, clientSecret: String? = nil, redirectURI: String)
 	{
 		self.clientID = clientID
+		self.clientSecret = clientSecret
         self.redirectURI = redirectURI
   
         self.storedRefreshToken = self._loadRefreshToken()
@@ -61,6 +62,7 @@ public class BXYouTubeAuthenticationController
 
 
 	private let clientID: String
+	private let clientSecret: String?
     private let redirectURI: String
     
     private lazy var foregroundSession: URLSession =
@@ -169,7 +171,7 @@ public class BXYouTubeAuthenticationController
             return true
         }
 		
-        let request = BXYouTubeNetworkHelpers.accessTokenRequest(clientID: self.clientID, redirectURI: self.redirectURI, authCode: code)
+        let request = BXYouTubeNetworkHelpers.accessTokenRequest(clientID: self.clientID, clientSecret:self.clientSecret, redirectURI: self.redirectURI, authCode: code)
         let task = self.foregroundSession.dataTask(with: request)
         {
             (data, _, error) in

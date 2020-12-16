@@ -58,9 +58,12 @@ internal class BXYouTubeNetworkHelpers
         var bodyObject: [String: Any] = [
             OAuthParams.grantType: "authorization_code",
             OAuthParams.clientID: clientID,
-            OAuthParams.code: authCode,
-            OAuthParams.redirectURI: redirectURI
-        ]
+			OAuthParams.code: authCode,
+            OAuthParams.redirectURI: redirectURI,
+            "access_type": "offline", // Required to get refreshToken on macOS
+			"prompt": "consent",
+			"approval_prompt": "force"
+       ]
         
         if let clientSecret = clientSecret
         {

@@ -242,6 +242,10 @@ public class BXYouTubeAuthenticationController
 			}
 		}
 		
+		#else
+		
+		task.resume()
+		
 		#endif
 	}
 	

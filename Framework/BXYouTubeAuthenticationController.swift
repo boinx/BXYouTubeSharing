@@ -182,18 +182,18 @@ public class BXYouTubeAuthenticationController
         let request = BXYouTubeNetworkHelpers.accessTokenRequest(clientID: self.clientID, clientSecret:self.clientSecret, redirectURI: self.redirectURI, authCode: code)
         let task = self.foregroundSession.dataTask(with: request)
         {
-            (data, _, error) in
+            (data, _, errorR) in
 			
-            if let error = error
+            if let error = errorR
             {
                 self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.other(underlyingError: error.localizedDescription)) }
                 return
             }
             else if let data = data
             {
-                let (accessToken, refreshToken, error) = self._extractValues(from: data)
+                let (accessToken, refreshToken, errorE) = self._extractValues(from: data)
 				
-                if let error = error
+                if let error = errorE
                 {
                     // YouTube API Error
                     self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
@@ -209,6 +209,13 @@ public class BXYouTubeAuthenticationController
                     self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: nil) }
                     return
                 }
+                else
+                {
+                    let errorReason = "Youtube did not provide a refresh token, which is unacceptable."
+                    assertionFailure(errorReason)
+                    self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: errorReason)) }
+                }
+
             }
 			
             self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: "invalid response")) }

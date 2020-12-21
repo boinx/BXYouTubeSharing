@@ -22,6 +22,10 @@ internal struct OAuthParams
     static let code = "code"
     static let refreshToken = "refresh_token"
     static let accessToken = "access_token"
+    #if os(macOS)
+    static let accessType = "access_type"
+    static let prompt = "prompt"
+    #endif
 }
 
 
@@ -35,14 +39,25 @@ internal class BXYouTubeNetworkHelpers
     static func authenticationURL(clientID: String, redirectURI: String, scope: String) -> URL?
     {
         var urlComponents = URLComponents(string: "https://accounts.google.com/o/oauth2/v2/auth")!
+        var queryItems = [URLQueryItem]()
         
-        urlComponents.queryItems = [
+        queryItems = [
             URLQueryItem(name: OAuthParams.responseType, value: "code"),
             URLQueryItem(name: OAuthParams.clientID, value: clientID),
             URLQueryItem(name: OAuthParams.redirectURI, value: redirectURI),
             URLQueryItem(name: OAuthParams.scope, value: scope)
         ]
         
+        #if os(macOS)
+        // SO: https://stackoverflow.com/questions/40811386/not-getting-refresh-token-in-youtube-oauth
+        // Docu: https://developers.google.com/youtube/v3/guides/auth/installed-apps#exchange-authorization-code
+        // App location under youtube settings: https://myaccount.google.com/security
+        queryItems.append(URLQueryItem(name: OAuthParams.accessType, value: "offline"))
+        // Request the refresh token on each login. We dont care if the user has added FM to his apps list or not.
+        queryItems.append(URLQueryItem(name: OAuthParams.prompt, value: "consent"))
+        #endif
+        
+        urlComponents.queryItems = queryItems
         return urlComponents.url
     }
     

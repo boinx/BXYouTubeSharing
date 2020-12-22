@@ -36,7 +36,7 @@ internal class BXYouTubeNetworkHelpers
     
     // MARK: - Authentication
     
-    static func authenticationURL(clientID: String, redirectURI: String, scope: String) -> URL?
+    static func authenticationURL(clientID: String, redirectURI: String, scope: String, redirectURIStateValue: String? = nil) -> URL?
     {
         var urlComponents = URLComponents(string: "https://accounts.google.com/o/oauth2/v2/auth")!
         var queryItems = [URLQueryItem]()
@@ -47,6 +47,10 @@ internal class BXYouTubeNetworkHelpers
             URLQueryItem(name: OAuthParams.redirectURI, value: redirectURI),
             URLQueryItem(name: OAuthParams.scope, value: scope)
         ]
+        
+        if let redirectURIStateValue = redirectURIStateValue {
+            queryItems.append(URLQueryItem(name: OAuthParams.state, value: redirectURIStateValue))
+        }
         
         #if os(macOS)
         // SO: https://stackoverflow.com/questions/40811386/not-getting-refresh-token-in-youtube-oauth

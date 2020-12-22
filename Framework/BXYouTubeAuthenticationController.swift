@@ -24,13 +24,22 @@ import UIKit
 public class BXYouTubeAuthenticationController
 {
 	/// Creates a new instance of this controller with the specified clientID uniquely identifying the host application.
-	
-	public init(clientID: String, clientSecret: String? = nil, redirectURI: String)
+    /// - parameter clientID: See Youtube Developer Dashboard.
+    /// - parameter clientSecret: See Youtube Developer Dashboard.
+    /// - parameter redirectURI: See Youtube Developer Dashboard.
+	/// - parameter redirectURIStateValue: The state value which can be used to dynamically attach a value to the oauth request.
+    ///
+    /// Youtube Developer Dashboard:
+    /// https://console.developers.google.com/projectselector2/apis/api/youtube/overview
+    /// Documentation:
+    /// https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps
+    public init(clientID: String, clientSecret: String? = nil, redirectURI: String, redirectURIStateValue: String? = nil)
 	{
 		self.clientID = clientID
 		self.clientSecret = clientSecret
         self.redirectURI = redirectURI
-  
+        self.redirectURIStateValue = redirectURIStateValue
+        
         self.storedRefreshToken = self._loadRefreshToken()
         self.storedAccessToken = self._loadAccessToken()
 	}
@@ -65,6 +74,7 @@ public class BXYouTubeAuthenticationController
 	private let clientID: String
 	private let clientSecret: String?
     private let redirectURI: String
+    private let redirectURIStateValue: String?
     
     private lazy var foregroundSession: URLSession =
     {
@@ -265,7 +275,7 @@ public class BXYouTubeAuthenticationController
     private var authenticationURL: URL?
     {
         let scope = BXYouTubeAuthenticationController.scope.joined(separator: " ")
-        return BXYouTubeNetworkHelpers.authenticationURL(clientID: self.clientID, redirectURI: self.redirectURI, scope: scope)
+        return BXYouTubeNetworkHelpers.authenticationURL(clientID: self.clientID, redirectURI: self.redirectURI, scope: scope, redirectURIStateValue: self.redirectURIStateValue)
     }
 	
 	

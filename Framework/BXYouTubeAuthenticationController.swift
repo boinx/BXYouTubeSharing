@@ -140,8 +140,11 @@ public class BXYouTubeAuthenticationController
 	
     public func handleOAuthResponse(returnURL: URL) -> Bool
     {
+        let lastURLPath = returnURL.pathComponents.last
         guard let urlComponents = URLComponents(url: returnURL, resolvingAgainstBaseURL: false),
-              returnURL.pathComponents.last == "BXYouTubeSharing"
+              // "BXYouTubeSharing" backward compatibility for iOS (FM iPad).
+              // "oauth" compatibility for macOS (FM6 - server side redirect).
+              lastURLPath == "BXYouTubeSharing" || lastURLPath == "oauth"
         else
         {
             // Host app needs to handle request.

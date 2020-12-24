@@ -91,7 +91,7 @@ internal class BXYouTubeNetworkHelpers
         return request
     }
     
-    static func refreshAccessTokenRequest(clientID: String, refreshToken: String) -> URLRequest
+    static func refreshAccessTokenRequest(clientID: String, clientSecret:String? = nil, refreshToken: String) -> URLRequest
     {
         let url = URL(string: "https://www.googleapis.com/oauth2/v4/token")!
         var request = URLRequest(url: url)
@@ -100,11 +100,18 @@ internal class BXYouTubeNetworkHelpers
         
         request.addValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
-        let bodyObject: [String: Any] = [
+        var bodyObject: [String:Any] =
+        [
             OAuthParams.grantType: "refresh_token",
             OAuthParams.clientID: clientID,
             OAuthParams.refreshToken: refreshToken
         ]
+        
+        if let clientSecret = clientSecret
+        {
+			bodyObject[OAuthParams.clientSecret] = clientSecret
+		}
+        
         request.httpBody = try! JSONSerialization.data(withJSONObject: bodyObject, options: [])
         
         return request

@@ -341,7 +341,7 @@ public class BXYouTubeAuthenticationController
 
         DispatchQueue.background.async
         {
-            let refreshRequest = BXYouTubeNetworkHelpers.refreshAccessTokenRequest(clientID: self.clientID, refreshToken: storedRefreshToken)
+            let refreshRequest = BXYouTubeNetworkHelpers.refreshAccessTokenRequest(clientID: self.clientID, clientSecret:self.clientSecret, refreshToken: storedRefreshToken)
             let task = self.foregroundSession.dataTask(with: refreshRequest)
             {
                 (data, response, error) in

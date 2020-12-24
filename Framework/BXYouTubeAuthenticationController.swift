@@ -230,6 +230,7 @@ public class BXYouTubeAuthenticationController
                     let errorReason = "Youtube did not provide a refresh token, which is unacceptable."
                     assertionFailure(errorReason)
                     self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: errorReason)) }
+                    return
                 }
 
             }

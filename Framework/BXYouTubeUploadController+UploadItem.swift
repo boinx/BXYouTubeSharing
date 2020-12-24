@@ -42,6 +42,27 @@ extension BXYouTubeUploadController
             case `public`
             case unlisted
             
+            public var index : Int
+            {
+             	switch self
+            	{
+					case .`private`: return 0
+ 					case .`public`:	 return 1
+ 					case .unlisted:	 return 2
+          		}
+            }
+            
+            public init?(with index:Int)
+            {
+             	switch index
+            	{
+					case 0:  self = .`private`
+ 					case 1:  self = .`public`
+ 					case 2:  self = .unlisted
+ 					default: return nil
+          		}
+            }
+            
             public var localizedName : String
             {
             	switch self

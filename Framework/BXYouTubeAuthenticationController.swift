@@ -63,6 +63,7 @@ public class BXYouTubeAuthenticationController
 	{
 		case unknownClient
         case notLoggedIn
+        case invalidAccount
         case youTubeAPIError(reason: String)
         case other(underlyingError: String)
 	}
@@ -560,12 +561,12 @@ public class BXYouTubeAuthenticationController
             }
 			
             let request = BXYouTubeNetworkHelpers.channelInfoRequest(accessToken: accessToken)
-            // Dispatch to background queue because we can't create the dataTask on self.queue.
-            DispatchQueue.background.async
+            
+			DispatchQueue.background.async // Dispatch to background queue because we can't create the dataTask on self.queue
             {
                 let task = self.foregroundSession.dataTask(with: request)
                 {
-                    (data, _, error) in
+                    (data,response,error) in
 					
                     if let error = error
                     {
@@ -576,7 +577,7 @@ public class BXYouTubeAuthenticationController
                         return
                     }
                     else if let data = data,
-                            let payload = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
+                            let payload = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String:Any]
                     {
                         if let errorDict = payload["error"] as? [String: Any],
                            let errorDescription = errorDict["message"] as? String
@@ -598,6 +599,16 @@ public class BXYouTubeAuthenticationController
                             }
                             return
                         }
+                        else
+                        {
+							// Oops, this account has no channels. Report an error
+							
+                            DispatchQueue.main.async
+                            {
+                                completionHandler(nil,Error.invalidAccount)
+                            }
+							return
+                        }
                     }
 					
                     DispatchQueue.main.async
@@ -605,6 +616,7 @@ public class BXYouTubeAuthenticationController
                         completionHandler(nil, Error.youTubeAPIError(reason: "Invalid response"))
                     }
                 }
+                
                 task.resume()
             }
         }

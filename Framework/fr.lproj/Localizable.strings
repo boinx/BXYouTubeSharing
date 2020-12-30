@@ -1,9 +1,9 @@
 /* PrivacyStatus name */
-"private" = "privé";
+"private" = "Privé";
 
 /* PrivacyStatus name */
-"public" = "public";
+"public" = "Public";
 
 /* PrivacyStatus name */
-"unlisted" = "non publié";
+"unlisted" = "Non publié";
 

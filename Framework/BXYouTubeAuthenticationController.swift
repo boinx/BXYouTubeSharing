@@ -646,7 +646,12 @@ public class BXYouTubeAuthenticationController
 	
     private func keychainIdentifier(for purpose: KeychainPurpose) -> String
     {
-        return "\(Bundle.main.bundleIdentifier ?? "untitledApp").BXYouTubeSharing.\(self.clientID).\(purpose.rawValue)".replacingOccurrences(of: ".", with: "_")
+//        return "\(Bundle.main.bundleIdentifier ?? "untitledApp").BXYouTubeSharing.\(self.clientID).\(purpose.rawValue)".replacingOccurrences(of: ".", with: "_")
+
+		let bundleID = Bundle.main.bundleIdentifier ?? "untitledApp"
+		
+        return "\(bundleID).BXYouTubeSharing.\(purpose.rawValue)"
+			.replacingOccurrences(of: ".", with: "_")
     }
 
 

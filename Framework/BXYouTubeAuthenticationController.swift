@@ -16,8 +16,14 @@ import UIKit
 #error("Unsupported platform")
 #endif
 
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
 // Youtube Developer Dashboard - Project Settings
 // https://console.developers.google.com/projectselector2/apis/api/youtube/overview
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -33,6 +39,7 @@ public class BXYouTubeAuthenticationController
     /// https://console.developers.google.com/projectselector2/apis/api/youtube/overview
     /// Documentation:
     /// https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps
+    
     public init(clientID: String, clientSecret: String? = nil, redirectURI: String, redirectURIStateValue: String? = nil)
 	{
 		self.clientID = clientID
@@ -91,6 +98,7 @@ public class BXYouTubeAuthenticationController
     
     /// Youtube scopes can be found:
     /// https://developers.google.com/identity/protocols/oauth2/scopes
+    
     private static let scope: Set<String> = [
         "https://www.googleapis.com/auth/youtube.readonly",
         "https://www.googleapis.com/auth/youtube.upload"

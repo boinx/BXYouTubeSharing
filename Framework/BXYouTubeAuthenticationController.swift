@@ -460,7 +460,8 @@ public class BXYouTubeAuthenticationController
     {
         didSet
         {
-            let identifier = self.keychainIdentifier(for: .accessToken)
+            let identifier = self.keychainIdentifier(for:.accessToken)
+			
             if let accessToken = self.storedAccessToken
             {
                 if let data = try? JSONEncoder().encode(accessToken)
@@ -474,7 +475,7 @@ public class BXYouTubeAuthenticationController
             }
             else
             {
-                BXKeychain.deleteData(forKey: identifier)
+                BXKeychain.deleteData(forKey:identifier)
             }
         }
     }
@@ -489,7 +490,7 @@ public class BXYouTubeAuthenticationController
 	
     private var completionHandlers: [(String?,Error?)->Void] = []
 	
-
+	
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -511,7 +512,7 @@ public class BXYouTubeAuthenticationController
             }
             else
             {
-                BXKeychain.deleteData(forKey: identifier)
+                BXKeychain.deleteData(forKey:identifier)
             }
         }
     }

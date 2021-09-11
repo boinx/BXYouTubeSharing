@@ -11,32 +11,53 @@ import Security
 
 struct BXKeychain
 {
-    static func data(forKey identifier: String) -> Data?
+    static func data(forKey identifier:String) -> Data?
     {
-        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    kSecMatchLimit as String: kSecMatchLimitOne,
-                                    kSecAttrAccount as String: identifier,
-                                    kSecReturnData as String: true]
+        let query: [String:Any] =
+        [
+			kSecClass as String: kSecClassGenericPassword,
+			kSecMatchLimit as String: kSecMatchLimitOne,
+			kSecAttrAccount as String: identifier,
+			kSecReturnData as String: true
+		]
         
-        var item: CFTypeRef?
+        var item: CFTypeRef? = nil
         let _ = SecItemCopyMatching(query as CFDictionary, &item)
         return item as? Data
     }
     
-    static func set(_ data: Data, forKey identifier: String)
+    static func set(_ data:Data, forKey identifier:String, name:String? = nil)
     {
-        let updateQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                          kSecAttrAccount as String: identifier]
+        var updateQuery:[String:Any] =
+        [
+			kSecClass as String: kSecClassGenericPassword,
+        	kSecAttrAccount as String: identifier
+		]
+        
+        if let name = name
+        {
+			updateQuery[kSecAttrComment as String] = name
+//			updateQuery[kSecAttrLabel as String] = name
+        }
         
         var status = SecItemUpdate(updateQuery as CFDictionary, [kSecValueData as String: data as CFData] as CFDictionary)
         var actionPerformed = "Updated"
         
         if status == errSecItemNotFound
         {
-            let addQuery: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                           kSecAttrAccount as String: identifier,
-                                           kSecValueData as String: data as CFData]
+            var addQuery:[String:Any] =
+            [
+				kSecClass as String: kSecClassGenericPassword,
+				kSecAttrAccount as String: identifier,
+				kSecValueData as String: data as CFData
+			]
             
+			if let name = name
+			{
+				addQuery[kSecAttrComment as String] = name
+				addQuery[kSecAttrLabel as String] = name
+			}
+			
             status = SecItemAdd(addQuery as CFDictionary, nil)
             actionPerformed = "Added"
         }

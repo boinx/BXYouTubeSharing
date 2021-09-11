@@ -465,7 +465,7 @@ public class BXYouTubeAuthenticationController
             {
                 if let data = try? JSONEncoder().encode(accessToken)
                 {
-                    BXKeychain.set(data, forKey: identifier)
+                    BXKeychain.set(data, forKey:identifier, name:"YouTube Login")
                 }
                 else
                 {
@@ -506,7 +506,7 @@ public class BXYouTubeAuthenticationController
             {
                 if let data = refreshToken.data(using: .utf8)
                 {
-                    BXKeychain.set(data, forKey: identifier)
+                    BXKeychain.set(data, forKey:identifier, name:"YouTube Login")
                 }
             }
             else

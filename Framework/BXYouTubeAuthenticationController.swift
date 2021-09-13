@@ -461,12 +461,14 @@ public class BXYouTubeAuthenticationController
         didSet
         {
             let identifier = self.keychainIdentifier(for:.accessToken)
-			
+			let appName = Bundle.main.infoDictionary?["CFBundleName"] ?? ""
+			let name = "\(appName) YouTube Login (1/2)".trimmingCharacters(in:CharacterSet.whitespaces)
+
             if let accessToken = self.storedAccessToken
             {
                 if let data = try? JSONEncoder().encode(accessToken)
                 {
-                    BXKeychain.set(data, forKey:identifier, name:"YouTube Login")
+                    BXKeychain.set(data, forKey:identifier, name:name)
                 }
                 else
                 {
@@ -502,12 +504,14 @@ public class BXYouTubeAuthenticationController
         didSet
         {
             let identifier = self.keychainIdentifier(for: .refreshToken)
+			let appName = Bundle.main.infoDictionary?["CFBundleName"] ?? ""
+			let name = "\(appName) YouTube Login (2/2)".trimmingCharacters(in:CharacterSet.whitespaces)
 			
             if let refreshToken = self.storedRefreshToken
             {
                 if let data = refreshToken.data(using: .utf8)
                 {
-                    BXKeychain.set(data, forKey:identifier, name:"YouTube Login")
+                    BXKeychain.set(data, forKey:identifier, name:name)
                 }
             }
             else
@@ -649,7 +653,7 @@ public class BXYouTubeAuthenticationController
 //        return "\(Bundle.main.bundleIdentifier ?? "untitledApp").BXYouTubeSharing.\(self.clientID).\(purpose.rawValue)".replacingOccurrences(of: ".", with: "_")
 
 		let bundleID = Bundle.main.bundleIdentifier ?? "untitledApp"
-		
+
         return "\(bundleID).BXYouTubeSharing.\(purpose.rawValue)"
 			.replacingOccurrences(of: ".", with: "_")
     }

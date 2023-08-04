@@ -167,7 +167,7 @@ internal class BXYouTubeNetworkHelpers
                 "description": item.description,
                 "tags": item.tags,
                 "categoryId": item.categoryID
-            ],
+			] as [String:Any],
             "status": [
                 "privacyStatus": item.privacyStatus.rawValue
             ]

@@ -3,7 +3,6 @@
   "strings" : {
     "private" : {
       "comment" : "PrivacyStatus name",
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -27,7 +26,6 @@
     },
     "public" : {
       "comment" : "PrivacyStatus name",
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -51,7 +49,6 @@
     },
     "unlisted" : {
       "comment" : "PrivacyStatus name",
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {

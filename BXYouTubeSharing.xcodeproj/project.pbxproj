@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -35,7 +35,7 @@
 		D08CEB46226F76AA00F88170 /* BXYouTubeAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */; };
 		D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */; };
 		D0A95D30228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A95D2F228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift */; };
-		D0A95D33228EAA7700256A36 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D0A95D35228EAA7700256A36 /* Localizable.strings */; };
+		D0B00B652CC0E3CA00D9EFC2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D0B00B642CC0E3CA00D9EFC2 /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,8 +119,6 @@
 		D05AB1AC225F49AA00205C7F /* BXYouTubeSharing-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BXYouTubeSharing-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05AB1B3225F49AA00205C7F /* BXYouTubeSharing_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharing_Tests.swift; sourceTree = "<group>"; };
 		D05AB1B5225F49AA00205C7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D05AB1C3225F6E7000205C7F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
-		D05AB1C5225F6E7400205C7F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D05AB1C6225F766100205C7F /* BXYouTubeSharing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BXYouTubeSharing.xcconfig; sourceTree = SOURCE_ROOT; };
 		D05AB1C7225F810200205C7F /* BXYouTubeUploadController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXYouTubeUploadController.swift; sourceTree = "<group>"; };
 		D05AB1CF225F913700205C7F /* BXYouTubeSharing-Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "BXYouTubeSharing-Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,15 +127,12 @@
 		D05AB1D6225F913700205C7F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D08AC60F22844CB300DFBD66 /* PromiseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PromiseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D08CEB45226F76AA00F88170 /* BXYouTubeAuthenticationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXYouTubeAuthenticationController.swift; sourceTree = "<group>"; };
-		D0987D54226EEA1300BCF772 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
-		D0987D58226EEA3100BCF772 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
-		D0987D59226EEA3D00BCF772 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		D0987D5A226EEA4000BCF772 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BXMainThreadDelegate.swift; sourceTree = "<group>"; };
 		D0A95D2F228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+BXYouTubeSharing.swift"; sourceTree = "<group>"; };
-		D0A95D34228EAA7700256A36 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		D0A95D36228EAA7900256A36 /* de */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		D0A95D37228EAA7A00256A36 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D0B00B632CC0E3CA00D9EFC2 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/Main.xcstrings; sourceTree = "<group>"; };
+		D0B00B642CC0E3CA00D9EFC2 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		D0B00B662CC0E3CA00D9EFC2 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/LaunchScreen.xcstrings; sourceTree = "<group>"; };
+		D0B00B672CC0E3CA00D9EFC2 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/MainInterface.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,7 +200,7 @@
 				489214D22272060C00D05999 /* DispatchQueue+backgroundQueue.swift */,
 				4859564822789F7800F992EF /* BXKeychain.swift */,
 				D0A95D2F228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift */,
-				D0A95D35228EAA7700256A36 /* Localizable.strings */,
+				D0B00B642CC0E3CA00D9EFC2 /* Localizable.xcstrings */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -444,7 +439,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0A95D33228EAA7700256A36 /* Localizable.strings in Resources */,
+				D0B00B652CC0E3CA00D9EFC2 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,9 +537,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				D05AB194225F48F300205C7F /* Base */,
-				D05AB1C3225F6E7000205C7F /* en */,
-				D0987D54226EEA1300BCF772 /* de */,
-				D0987D58226EEA3100BCF772 /* fr */,
+				D0B00B632CC0E3CA00D9EFC2 /* mul */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -553,9 +546,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				D05AB199225F48F400205C7F /* Base */,
-				D05AB1C5225F6E7400205C7F /* en */,
-				D0987D59226EEA3D00BCF772 /* de */,
-				D0987D5A226EEA4000BCF772 /* fr */,
+				D0B00B662CC0E3CA00D9EFC2 /* mul */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -564,18 +555,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				D05AB1D4225F913700205C7F /* Base */,
+				D0B00B672CC0E3CA00D9EFC2 /* mul */,
 			);
 			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
-		D0A95D35228EAA7700256A36 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D0A95D34228EAA7700256A36 /* en */,
-				D0A95D36228EAA7900256A36 /* de */,
-				D0A95D37228EAA7A00256A36 /* fr */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -633,6 +615,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -687,6 +670,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -710,6 +694,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.boinx.BXYouTubeSharing-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -730,6 +715,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.boinx.BXYouTubeSharing-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -752,6 +738,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.boinx.BXYouTubeSharing;
 				PRODUCT_NAME = BXYouTubeSharing;
 				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -775,6 +762,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.boinx.BXYouTubeSharing;
 				PRODUCT_NAME = BXYouTubeSharing;
 				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -835,6 +823,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.boinx.BXYouTubeSharing-App.Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -853,6 +842,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.boinx.BXYouTubeSharing-App.Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

@@ -1,0 +1,306 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "7Ox-W6-RVB.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Login\"; ObjectID = \"7Ox-W6-RVB\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einloggen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecter"
+          }
+        }
+      }
+    },
+    "8NY-hQ-lA4.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Share\"; ObjectID = \"8NY-hQ-lA4\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partager"
+          }
+        }
+      }
+    },
+    "d4a-Qu-cnq.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Account\"; ObjectID = \"d4a-Qu-cnq\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
+    },
+    "e13-gt-Ch1.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Title\"; ObjectID = \"e13-gt-Ch1\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titel"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre"
+          }
+        }
+      }
+    },
+    "EGI-LJ-zdc.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Open in YouTube\"; ObjectID = \"EGI-LJ-zdc\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In YouTube öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in YouTube"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir sur YouTube"
+          }
+        }
+      }
+    },
+    "EJp-V9-ekk.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Category\"; ObjectID = \"EJp-V9-ekk\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kategorie"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Catégorie"
+          }
+        }
+      }
+    },
+    "F9M-4o-kdY.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Debugging\"; ObjectID = \"F9M-4o-kdY\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debugging"
+          }
+        }
+      }
+    },
+    "ImN-V6-B68.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Exit\"; ObjectID = \"ImN-V6-B68\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit"
+          }
+        }
+      }
+    },
+    "OzZ-Rh-gmW.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Logout\"; ObjectID = \"OzZ-Rh-gmW\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurücksetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logout"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser"
+          }
+        }
+      }
+    },
+    "SVv-6L-SIu.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Tags\"; ObjectID = \"SVv-6L-SIu\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tags"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tags"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mots clés"
+          }
+        }
+      }
+    },
+    "uCH-Va-HZv.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"File\"; ObjectID = \"uCH-Va-HZv\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datei"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fichier"
+          }
+        }
+      }
+    },
+    "UmE-1J-9oS.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Privacy\"; ObjectID = \"UmE-1J-9oS\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privatsphäre"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confidentialité"
+          }
+        }
+      }
+    },
+    "Vca-Q3-e8Q.normalTitle" : {
+      "comment" : "Class = \"UIButton\"; normalTitle = \"Select\"; ObjectID = \"Vca-Q3-e8Q\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionner"
+          }
+        }
+      }
+    },
+    "y6j-2w-fgv.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Description\"; ObjectID = \"y6j-2w-fgv\"; Note = \"DNL\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "beschreibung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

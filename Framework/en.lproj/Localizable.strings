@@ -1,8 +1,0 @@
-/* PrivacyStatus name */
-"private" = "Private";
-
-/* PrivacyStatus name */
-"public" = "Public";
-
-/* PrivacyStatus name */
-"unlisted" = "Unlisted";

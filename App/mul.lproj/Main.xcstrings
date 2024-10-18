@@ -53,10 +53,22 @@
       "comment" : "Class = \"UILabel\"; text = \"Account\"; ObjectID = \"d4a-Qu-cnq\"; Note = \"DNL\";",
       "extractionState" : "migrated",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Account"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compte"
           }
         }
       }
@@ -137,10 +149,22 @@
       "comment" : "Class = \"UILabel\"; text = \"Debugging\"; ObjectID = \"F9M-4o-kdY\"; Note = \"DNL\";",
       "extractionState" : "migrated",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debugging"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Debugging"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débogage"
           }
         }
       }
@@ -149,10 +173,22 @@
       "comment" : "Class = \"UIButton\"; normalTitle = \"Exit\"; ObjectID = \"ImN-V6-B68\"; Note = \"DNL\";",
       "extractionState" : "migrated",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beenden"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Exit"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitter"
           }
         }
       }

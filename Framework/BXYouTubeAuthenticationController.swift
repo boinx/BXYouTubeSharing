@@ -117,7 +117,7 @@ public class BXYouTubeAuthenticationController
 	
 	/// Starts the OAuth based login process to YouTube
 	
-    @discardableResult public func logIn() -> Bool
+    public func login()
     {
         guard let url = self.authenticationURL else
         {
@@ -141,7 +141,7 @@ public class BXYouTubeAuthenticationController
 
 	/// Logs out the user from YouTube
 	
-    public func logOut()
+    public func logout()
     {
         self.storedAccessToken = nil
         self.storedRefreshToken = nil

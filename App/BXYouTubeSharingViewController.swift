@@ -193,7 +193,7 @@ class BXYouTubeSharingViewController : UIViewController, UIDocumentPickerDelegat
     
     @IBAction func logOut(_ sender: Any)
     {
-        BXYouTubeAuthenticationController.shared!.logOut()
+        BXYouTubeAuthenticationController.shared!.logout()
     }
     
     @IBAction func openInYouTube(_ sender: Any)

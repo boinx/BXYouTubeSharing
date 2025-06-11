@@ -7,6 +7,8 @@
 
 
 import Foundation
+import OAuth2
+import WebKit
 
 #if os(macOS)
 import AppKit
@@ -60,7 +62,11 @@ public class BXYouTubeAuthenticationController
 	
 	public weak var delegate: BXYouTubeAuthenticationControllerDelegate? = nil
 	
+   /// This object handles the OAuth login 
 	
+	internal var oauth2:OAuth2CodeGrant? = nil
+
+
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -119,22 +125,120 @@ public class BXYouTubeAuthenticationController
 	
     public func login()
     {
-        guard let url = self.authenticationURL else
+        guard let authURL = self.authenticationURL else
         {
             print("Fail")
-            return false
+            return
         }
 		
         self.delegate?.onMainThread { $0.youTubeAuthenticationControllerWillLogIn(self) }
 		
+//		self.loginWithWebBrowser(authURL)
+		self.loginWithOAuth2(authURL)
+    }
+
+
+	/// Uses an external web browser (Safari) for the OAuth process.
+	///
+	/// Please Note: Apple and adobe didn'tlike this and rejected submissions.
+	
+    public func loginWithWebBrowser(_ authURL:URL)
+    {
         #if os(macOS)
-        return NSWorkspace.shared.open(url)
+        NSWorkspace.shared.open(authURL)
         #elseif os(iOS)
-        UIApplication.shared.open(url, options: [:])
-        return true
+        UIApplication.shared.open(authURL, options:[:])
         #endif
     }
+
+
+	/// Uses the OAuth2 framework for the authentication process.
+	///
+	/// On macOS a WKWebView in a modal window is used, while on iOS an ASAuthenticationSession is used.
 	
+    public func loginWithOAuth2(_ authURL:URL)
+    {
+        let clientID = self.clientID
+//        guard let clientSecret = self.clientSecret else { return }
+        let redirectURI = self.redirectURI
+       
+		// OAuth login configuration. This info must match the project settings in the YouTube developer console.
+		
+		var settings:OAuth2JSON =
+		[
+			"authorize_uri": "https://accounts.google.com/o/oauth2/v2/auth",
+			"response_type": "code",
+			"client_id": clientID,
+//			"client_secret": clientSecret,
+			"redirect_uris": [redirectURI],
+			"scope" : BXYouTubeAuthenticationController.scope.joined(separator: " "), // required by YouTube
+		]
+
+		if let state = redirectURIStateValue
+		{
+			settings["state"] = state
+        }
+
+        // StackOverflow: https://stackoverflow.com/questions/40811386/not-getting-refresh-token-in-youtube-oauth
+        // Docu: https://developers.google.com/youtube/v3/guides/auth/installed-apps#exchange-authorization-code
+        // App location under youtube settings: https://myaccount.google.com/security
+        
+		#if os(macOS)
+        settings["access_type"] = "offline"
+        settings["prompt"] = "consent"
+        #endif
+
+		// Instead of using the (external) Safari browser, we use an embedded WKWebView for the OAuth login process.
+		// This might me slightly less secure, but provides a much nicer login UX. Also consider, that the Adobe and
+		// App Store review teams didn't like the previous implementation going through an external browser.
+		
+		let oauth2 = OAuth2YouTube(settings:settings)
+		oauth2.logger = OAuth2DebugLogger(.debug)
+		oauth2.authConfig.authorizeEmbedded = true
+//      oauth2.authConfig.authorizeEmbeddedModal = true
+		oauth2.authConfig.authorizeEmbeddedAutoDismiss = true
+
+		#if os(iOS)
+		oauth2.authConfig.authorizeContext = UIApplication.frontViewController()
+		oauth2.authConfig.ui.useAuthenticationSession = true
+		oauth2.authConfig.ui.prefersEphemeralWebBrowserSession = true
+		oauth2.authConfig.ui.modalPresentationStyle = .formSheet
+		#endif
+
+        self.oauth2 = oauth2
+  
+		// Make sure that the default size for the embedded login window is large enough for Boinx
+		// Connect login web page, as well as alternatives from Google, Facebook, and Apple.
+	
+		#if os(macOS)
+		OAuth2WebViewController.webViewWindowWidth = 500.0
+		OAuth2WebViewController.webViewWindowHeight = 680.0
+		#endif
+		
+		// To solve several UX issues for the login process we use a private browsing mode (i.e. non
+		// persistent cookies). Without a private browsing mode we would not be able to logout and login
+		// again with a different account. For implementation details, see the answer by Zack Shapiro
+		// at this thread: https://stackoverflow.com/questions/31289838/how-to-delete-wkwebview-cookies
+
+		#if os(macOS)
+		OAuth2WebViewController.webViewConfiguration =
+		{
+			let configuration = WKWebViewConfiguration()
+			configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
+			return configuration
+		}
+		#endif
+		
+        // Start authorization
+        
+		oauth2.authorize()
+		{
+			[weak self] json,error in
+			print("\(Self.self).\(#function): error = \(String(describing:error))")
+			self?.oauth2 = nil
+		}
+    }
+
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -224,8 +328,7 @@ public class BXYouTubeAuthenticationController
                     self.delegate?.onMainThread { $0.youTubeAuthenticationControllerDidLogIn(self, error: Error.youTubeAPIError(reason: error)) }
                     return
                 }
-				else if let accessToken = accessToken,
-                   let refreshToken = refreshToken
+				else if let accessToken = accessToken, let refreshToken = refreshToken
                 {
                     // Valid Data
                     self.storedAccessToken = accessToken
@@ -659,6 +762,41 @@ public class BXYouTubeAuthenticationController
     }
 
 
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+
+// MARK: - OAuth2
+
+class OAuth2YouTube : OAuth2CodeGrant
+{
+	// Bugfix: Even though we specified access_type=offline and prompt=consent in the settings dictionary in
+	// the loginWithOAuth2() function above, these two queries din't make it into the URL that was built by
+	// the OAuth framework. So we'll just append them in this override.
+	
+	override open func authorizeURL(params:OAuth2StringDict? = nil) throws -> URL
+	{
+		let url1 = try super.authorizeURL(withRedirect:nil, scope:nil, params:params)
+		let string1 = url1.absoluteString
+		let string2 = string1.appending("&access_type=offline&prompt=consent")
+		let url2 = URL(string:string2)!
+		return url2
+	}
+
+
+    // Override this method to pass control to BXYouTubeAuthenticationController, instead of lettings OAuth2 handle the accessToken & refreshToken.
+
+	override open func handleRedirectURL(_ returnURL:URL)
+    {
+		logger?.debug("OAuth2", msg:"Handling redirect URL \(returnURL.description)")
+        
+		_ = BXYouTubeAuthenticationController.shared?.handleOAuthResponse(returnURL:returnURL)
+		
+//		super.handleRedirectURL(returnURL)
+		self.abortAuthorization()
+	}
 }
 
 

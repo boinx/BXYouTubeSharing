@@ -36,6 +36,7 @@
 		D0987D5C226F5E2A00BCF772 /* BXMainThreadDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0987D5B226F5E2A00BCF772 /* BXMainThreadDelegate.swift */; };
 		D0A95D30228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A95D2F228EA9C700256A36 /* Bundle+BXYouTubeSharing.swift */; };
 		D0B00B652CC0E3CA00D9EFC2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D0B00B642CC0E3CA00D9EFC2 /* Localizable.xcstrings */; };
+		D0C6B3162DF6B697001C3722 /* OAuth2 in Frameworks */ = {isa = PBXBuildFile; productRef = D0C6B3152DF6B697001C3722 /* OAuth2 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0C6B3162DF6B697001C3722 /* OAuth2 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +413,9 @@
 				fr,
 			);
 			mainGroup = D05AB12A225DF48100205C7F;
+			packageReferences = (
+				D0C6B3142DF6B697001C3722 /* XCRemoteSwiftPackageReference "OAuth2" */,
+			);
 			productRefGroup = D05AB134225DF48100205C7F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -896,6 +901,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D0C6B3142DF6B697001C3722 /* XCRemoteSwiftPackageReference "OAuth2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:peterb180369/OAuth2.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D0C6B3152DF6B697001C3722 /* OAuth2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0C6B3142DF6B697001C3722 /* XCRemoteSwiftPackageReference "OAuth2" */;
+			productName = OAuth2;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D05AB12B225DF48100205C7F /* Project object */;
 }

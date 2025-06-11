@@ -14,6 +14,7 @@ import WebKit
 import AppKit
 #elseif os(iOS)
 import UIKit
+import BXUIKit
 #else
 #error("Unsupported platform")
 #endif

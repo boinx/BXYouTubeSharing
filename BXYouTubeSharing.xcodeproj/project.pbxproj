@@ -18,6 +18,7 @@
 		48B96C872260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */; };
 		48B96C892260DBFA00E89EF6 /* URL+fileSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */; };
 		48B96C8D2265972C00E89EF6 /* movie.mov in Resources */ = {isa = PBXBuildFile; fileRef = 48B96C8C2265972C00E89EF6 /* movie.mov */; };
+		D02126DB2DFAA6EC00BD74AB /* BXUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D02126DA2DFAA6EC00BD74AB /* BXUIKit.framework */; };
 		D05AB190225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB18F225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift */; };
 		D05AB192225F48F300205C7F /* BXYouTubeSharingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05AB191225F48F300205C7F /* BXYouTubeSharingViewController.swift */; };
 		D05AB195225F48F300205C7F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05AB193225F48F300205C7F /* Main.storyboard */; };
@@ -107,6 +108,7 @@
 		48B96C862260C50100E89EF6 /* BXYouTubeNetworkHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeNetworkHelpers.swift; sourceTree = "<group>"; };
 		48B96C882260DBFA00E89EF6 /* URL+fileSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+fileSize.swift"; sourceTree = "<group>"; };
 		48B96C8C2265972C00E89EF6 /* movie.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = movie.mov; path = ../../../Desktop/movie.mov; sourceTree = "<group>"; };
+		D02126DA2DFAA6EC00BD74AB /* BXUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = BXUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05AB18D225F48F300205C7F /* BXYouTubeSharing-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BXYouTubeSharing-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D05AB18F225F48F300205C7F /* BXYouTubeSharingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharingAppDelegate.swift; sourceTree = "<group>"; };
 		D05AB191225F48F300205C7F /* BXYouTubeSharingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BXYouTubeSharingViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0C6B3162DF6B697001C3722 /* OAuth2 in Frameworks */,
+				D02126DB2DFAA6EC00BD74AB /* BXUIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +282,7 @@
 		D05AB1DE225F926700205C7F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D02126DA2DFAA6EC00BD74AB /* BXUIKit.framework */,
 				D08AC60F22844CB300DFBD66 /* PromiseKit.framework */,
 			);
 			name = Frameworks;

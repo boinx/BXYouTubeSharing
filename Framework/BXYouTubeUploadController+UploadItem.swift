@@ -67,9 +67,9 @@ extension BXYouTubeUploadController
             {
             	switch self
             	{
-					case .`private`: return NSLocalizedString("private", bundle:Bundle.BXYouTubeSharing, value:"private", comment:"PrivacyStatus name")
- 					case .`public`:	 return NSLocalizedString("public", bundle:Bundle.BXYouTubeSharing, value:"public", comment:"PrivacyStatus name")
- 					case .unlisted:	 return NSLocalizedString("unlisted", bundle:Bundle.BXYouTubeSharing, value:"unlisted", comment:"PrivacyStatus name")
+					case .`private`: return NSLocalizedString("private", bundle:.BXYouTubeSharing, value:"private", comment:"PrivacyStatus name")
+ 					case .`public`:	 return NSLocalizedString("public", bundle:.BXYouTubeSharing, value:"public", comment:"PrivacyStatus name")
+ 					case .unlisted:	 return NSLocalizedString("unlisted", bundle:.BXYouTubeSharing, value:"unlisted", comment:"PrivacyStatus name")
           		}
             }
         }
